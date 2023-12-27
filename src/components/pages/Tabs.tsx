@@ -10,7 +10,7 @@ import {
 import { IonReactRouter } from '@ionic/react-router';
 import { cog, flash, list, addCircle } from 'ionicons/icons';
 import Home from './Home';
-import Prouduct from './Product/Prouduct';
+import Prouduct from './Prouduct';
 
 const Tabs = () => {
   return (

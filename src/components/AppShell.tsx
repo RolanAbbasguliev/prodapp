@@ -14,6 +14,7 @@ import { Route } from 'react-router-dom';
 import Tabs from './pages/Tabs';
 import { useEffect, useState } from 'react';
 import { Preferences } from '@capacitor/preferences';
+import Auth from './pages/Auth';
 
 setupIonicReact({});
 defineCustomElements(window);
@@ -34,7 +35,7 @@ const AppShell = () => {
     <IonApp>
       <IonReactRouter>
         <IonRouterOutlet id="main">
-          <Route path="/" render={() => <Tabs />} />
+          <Route path="/" render={() => <Auth />} />
         </IonRouterOutlet>
       </IonReactRouter>
     </IonApp>

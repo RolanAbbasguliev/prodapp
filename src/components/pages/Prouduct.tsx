@@ -36,6 +36,26 @@ const Prouduct = () => {
     });
   }
 
+  const createProduct = async () => {
+    try {
+      const data = {
+        name: 'Prod',
+        description: 'test',
+        price: 100,
+        id: 1,
+      };
+      const res = await fetch('/api/product', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
   const fetchMe = async () => {
     const res = await fetch('/api/product');
     console.log(await res.json());
@@ -101,7 +121,7 @@ const Prouduct = () => {
             id="open-toast"
             expand="full"
             size="large"
-            onClick={fetchMe}
+            onClick={createProduct}
           >
             Add Product
           </IonButton>
