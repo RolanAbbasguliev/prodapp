@@ -10,16 +10,21 @@ import {
 import { IonReactRouter } from '@ionic/react-router';
 import { cog, flash, list, addCircle } from 'ionicons/icons';
 import Home from './Home';
+import Prouduct from './Product/Prouduct';
 
 const Tabs = () => {
   return (
     <IonTabs>
       <IonRouterOutlet>
         <Route path="/tabs/feed" render={() => <Home />} exact={true} />
+        <Route path="/tabs/product" render={() => <Prouduct />} exact={true} />
       </IonRouterOutlet>
       <IonTabBar slot="bottom">
-        <IonTabButton tab="tab2" href="/tabs/lists">
+        <IonTabButton tab="tab2" href="/tabs/product">
           <IonIcon icon={addCircle} />
+        </IonTabButton>
+        <IonTabButton tab="tab3" href="/tabs/feed">
+          <IonIcon icon={flash} />
         </IonTabButton>
       </IonTabBar>
     </IonTabs>

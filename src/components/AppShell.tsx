@@ -8,15 +8,28 @@ import {
   IonTabButton,
   IonIcon,
 } from '@ionic/react';
-import { cog, flash, list } from 'ionicons/icons';
-import { StatusBar, Style } from '@capacitor/status-bar';
-
 import { IonReactRouter } from '@ionic/react-router';
-import { Redirect, Route } from 'react-router-dom';
+import { defineCustomElements } from '@ionic/pwa-elements/loader';
+import { Route } from 'react-router-dom';
 import Tabs from './pages/Tabs';
+import { useEffect, useState } from 'react';
+import { Preferences } from '@capacitor/preferences';
 
 setupIonicReact({});
+defineCustomElements(window);
+
 const AppShell = () => {
+  // const [authorized, setAuthorized] = useState(false);
+  // useEffect(() => {
+  //   (async () => {
+  //     const data = await Preferences.get({ key: 'token' });
+  //     if (data.value === null) {
+  //       await Preferences.set({ key: 'token', value: 'tokenenene' });
+  //     } else {
+  //       console.log(await Preferences.get({ key: 'token' }), 'THIS IS TOKEN');
+  //     }
+  //   })();
+  // }, []);
   return (
     <IonApp>
       <IonReactRouter>

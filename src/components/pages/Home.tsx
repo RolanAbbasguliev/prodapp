@@ -23,13 +23,6 @@ const Home = () => {
           </IonButtons>
         </IonToolbar>
       </IonHeader>
-      <IonContent className="ion-padding" fullscreen>
-        <IonHeader collapse="condense">
-          <IonToolbar>
-            <IonTitle size="large">Feed</IonTitle>
-          </IonToolbar>
-        </IonHeader>
-      </IonContent>
     </IonPage>
   );
 };
