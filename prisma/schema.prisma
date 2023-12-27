@@ -11,18 +11,18 @@ datasource db {
 }
 
 model User {
-  id Int @id @default(autoincrement())
-  email String @unique
-  name String?
-  products Product[]
+  id           Int       @id @default(autoincrement())
+  email        String    @unique
+  name         String
+  passwordHash String    
+  products     Product[]
 }
 
 model Product {
-  id Int @id @default(autoincrement())
-  name String
+  id          Int    @id @default(autoincrement())
+  name        String
   description String
-  price Int
-  creator User @relation(fields: [creatorId], references: [id])
-  creatorId Int
-
+  price       Int
+  creator     User   @relation(fields: [creatorId], references: [id])
+  creatorId   Int
 }
