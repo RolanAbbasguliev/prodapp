@@ -6,11 +6,11 @@ type Data = {
 }
 export function middleware(req: NextRequest) {
     const res = NextResponse
-    const token = req.cookies.get('tokend')
+    // const token = req.cookies.get('tokend')
 
-    if (!token) {
-        return res.redirect(new URL('/', req.url))
-    }
+    // if (!token) {
+    //     return res.redirect(new URL('/', req.url))
+    // }
 
     return res.next()
 }

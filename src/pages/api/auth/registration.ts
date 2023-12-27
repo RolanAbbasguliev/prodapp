@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import 'dotenv/config'
+
 import prisma from '@/db/db'
 import jwt from 'jsonwebtoken'
 

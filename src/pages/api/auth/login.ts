@@ -27,18 +27,22 @@ export default async function handler(
             }
 
             const validPassword = await bcrypt.compare(
-                password,
+                String(password),
                 user?.passwordHash!
             )
 
             if (!validPassword) {
                 res.status(400).json({ message: 'Password error' })
             }
-            setCookie(req, res, user?.email!)
+            const token = createToken(user?.email!)
+            setCookie(req, res, token)
+
             res.status(200).json({ message: 'Success' })
         } catch (e) {
-            res.status(400).json({ message: `Error: ${e}` })
+            console.log(e)
+            res.status(400).json({ message: 'Error' })
         }
+    } else {
         res.status(400).json({ message: 'Bad request' })
     }
 }
