@@ -14,7 +14,7 @@ model User {
   id           Int       @id @default(autoincrement())
   email        String    @unique
   name         String
-  passwordHash String    
+  passwordHash String
   products     Product[]
 }
 
@@ -23,6 +23,7 @@ model Product {
   name        String
   description String
   price       Int
+  s3ImageId   String @unique
   creator     User   @relation(fields: [creatorId], references: [id])
   creatorId   Int
 }

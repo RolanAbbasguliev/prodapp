@@ -14,16 +14,16 @@ export default withContext(
     (setContext: (arg1: string, arg2: string) => void, req: NextRequest) => {
         const token = req.cookies.get('token')?.value
 
-        if (!token) {
-            return NextResponse.json(
-                {
-                    message: 'No token provided',
-                },
-                { status: 400 }
-            )
-        }
-        const decoded = jwt.verify(token, process.env.JWT_SECRET!)
-        setContext('token', token)
+        // if (!token) {
+        //     return NextResponse.json(
+        //         {
+        //             message: 'No token provided',
+        //         },
+        //         { status: 400 }
+        //     )
+        // }
+        // const decoded = jwt.verify(token, process.env.JWT_SECRET!)
+        // setContext('token', token)
         return NextResponse.next()
     }
 )

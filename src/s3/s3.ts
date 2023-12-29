@@ -8,3 +8,4 @@ export const s3 = new EasyYandexS3({
     Bucket: 'prodappbucket',
     debug: true,
 })
+ 

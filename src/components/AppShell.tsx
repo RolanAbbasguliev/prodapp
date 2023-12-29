@@ -10,9 +10,8 @@ const AppShell = () => {
     return (
         <IonApp>
             <IonReactRouter>
-                <IonRouterOutlet id="main">
-                    <Route path="/" render={() => <Tabs />} />
-                    {/* <Route path="/tabs" render={() => <Tabs />} /> */}
+                <IonRouterOutlet>
+                    <Route path="/" render={() => <Auth />} />
                 </IonRouterOutlet>
             </IonReactRouter>
         </IonApp>

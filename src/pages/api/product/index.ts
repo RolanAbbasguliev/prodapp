@@ -7,6 +7,7 @@ import { Readable } from 'stream'
 import { NextRequest } from 'next/server'
 import fs from 'fs'
 import { s3 } from '@/s3/s3'
+import { v4 as uuidv4 } from 'uuid'
 import { getContext } from '@/utilities/contentx'
 
 export const config = {
@@ -23,12 +24,32 @@ export default async function handler(
 ) {
     if (req.method === 'POST') {
         try {
-            console.log('WTF')
-            const { name, description, price, id, file } = JSON.parse(req.body)
-            const base64 = file.split(';base64,').pop()
-            const buf = Buffer.from(base64, 'base64')
+            const userId = getContext(req, 'token')
+            // const { name, description, price, image } = JSON.parse(req.body)
 
-            res.status(200).json({ foo: getContext(req, 'foo') })
+            // const base64 = image.split(';base64,').pop()
+            // const buf = Buffer.from(base64, 'base64')
+            // const imageId = uuidv4()
+
+            // await prisma.product.create({
+            //     data: {
+            //         name: name,
+            //         description: description,
+            //         price: price,
+            //         creatorId: 1,
+            //         s3ImageId: imageId,
+            //     },
+            // })
+
+            // let upload = await s3.Upload(
+            //     {
+            //         buffer: buf,
+            //         name: 'image.jpeg',
+            //     },
+            //     '/test'
+            // )
+
+            // res.status(200).json({ foo: getContext(req, 'foo') })
 
             // await prisma.product.create({
             //     data: {
