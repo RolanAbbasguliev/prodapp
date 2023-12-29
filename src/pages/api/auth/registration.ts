@@ -21,7 +21,7 @@ export default async function handler(
 
             const hash = await bcrypt.hash(password, 10)
 
-            await prisma.user.create({
+            const user = await prisma.user.create({
                 data: {
                     email: email,
                     name: name,
@@ -29,7 +29,8 @@ export default async function handler(
                 },
             })
 
-            setCookie(req, res, email)
+            const token = createToken(user?.id!)
+            setCookie(req, res, token)
 
             res.status(200).json({ message: 'Success' })
         } catch (e) {

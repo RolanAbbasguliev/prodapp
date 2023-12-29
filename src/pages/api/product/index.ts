@@ -5,40 +5,60 @@ import prisma from '@/db/db'
 import { createWriteStream, createReadStream } from 'fs'
 import { Readable } from 'stream'
 import { NextRequest } from 'next/server'
+import fs from 'fs'
+import { s3 } from '@/s3/s3'
+import { getContext } from '@/utilities/contentx'
 
-async function buffer(readable: Readable) {
-    const chunks = []
-
-    for await (const chunk of readable) {
-        chunks.push(typeof chunk === 'string' ? Buffer.from(chunk) : chunk)
-    }
-    return Buffer.concat(chunks)
+export const config = {
+    api: {
+        bodyParser: {
+            sizeLimit: '4mb',
+        },
+    },
 }
 
-// export default async function handler(
-//     req: NextRequest,
-//     res: NextApiResponse<any>
-// ) {
-//     if (req.method === 'POST') {
+export default async function handler(
+    req: NextApiRequest,
+    res: NextApiResponse<any>
+) {
+    if (req.method === 'POST') {
+        try {
+            console.log('WTF')
+            const { name, description, price, id, file } = JSON.parse(req.body)
+            const base64 = file.split(';base64,').pop()
+            const buf = Buffer.from(base64, 'base64')
 
-//         // console.log(data)
+            res.status(200).json({ foo: getContext(req, 'foo') })
 
-//         // const { id, name, price, description } = req.body
+            // await prisma.product.create({
+            //     data: {
+            //         name: name,
+            //         description: description,
+            //         price: price,
+            //         creatorId: id,
+            //     },
+            // })
 
-//         // console.log(req, 'FILE')
-//         // await prisma.product.create({
-//         //     data: {
-//         //         name: name,
-//         //         description: description,
-//         //         price: price,
-//         //         creatorId: id,
-//         //     },
-//         // })
-//     }
-//     res.status(200).json({ name: 'index' })
-// }
+            // console.log
 
-export default async function POST(request: NextRequest) {
-    const data = await request.formData()
-    console.log(data)
+            // let upload = await s3.Upload(
+            //     {
+            //         buffer: buf,
+            //         name: 'sosi.jpeg',
+            //     },
+            //     '/test/'
+            // )
+
+            // console.log(upload)
+        } catch (e) {
+            console.log(e)
+        }
+
+        // console.log(data)
+
+        // const { id, name, price, description } = req.body
+
+        // console.log(req, 'FILE')
+    }
+    res.status(200).json({ name: 'index' })
 }

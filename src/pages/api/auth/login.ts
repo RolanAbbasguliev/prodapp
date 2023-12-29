@@ -34,7 +34,7 @@ export default async function handler(
             if (!validPassword) {
                 res.status(400).json({ message: 'Password error' })
             }
-            const token = createToken(user?.email!)
+            const token = createToken(user?.id!)
             setCookie(req, res, token)
 
             res.status(200).json({ message: 'Success' })

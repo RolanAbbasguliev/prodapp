@@ -5,9 +5,8 @@ import { createToken } from '@/utilities/jwt'
 export const setCookie = (
     req: NextApiRequest,
     res: NextApiResponse,
-    email: string
+    token: string
 ) => {
-    const token = createToken(email)
     setCook('token', token, {
         req,
         res,

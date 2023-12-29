@@ -1,9 +1,9 @@
 import jwt from 'jsonwebtoken'
 
-export const createToken = (email: string) => {
+export const createToken = (id: number) => {
     const token = jwt.sign(
         {
-            data: email,
+            data: id,
         },
         process.env.JWT_SECRET!
     )

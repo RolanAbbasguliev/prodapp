@@ -12,11 +12,15 @@ import {
     IonToast,
     IonToolbar,
 } from '@ionic/react'
-import React, { ChangeEvent, EventHandler, useState } from 'react'
+import React, { ChangeEvent, EventHandler, FormEvent, useState } from 'react'
 import { Preferences } from '@capacitor/preferences'
 import { Camera, CameraResultType } from '@capacitor/camera'
+import { Buffer } from 'buffer'
+import { Controller, useForm } from 'react-hook-form'
+import Input, { InputProps } from '../shared/Input'
 
 const Prouduct = () => {
+    const { control, handleSubmit } = useForm()
     const [name, setName] = useState('')
     const [photo, setPhoto] = useState('')
     const onClick = async () => {
@@ -42,12 +46,13 @@ const Prouduct = () => {
                 name: 'Prod',
                 description: 'test',
                 price: 100,
-                id: 1,
+                file: photo,
             }
+
             const res = await fetch('/api/product', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json',
+                    'Content-Type': 'application/octet-stream',
                 },
                 body: JSON.stringify(data),
             })
@@ -66,14 +71,31 @@ const Prouduct = () => {
                 resultType: CameraResultType.Base64,
             })
 
-            // setPhoto(imageUrl!);
             const img = `data:image/jpeg;base64, ${image.base64String}`
+
             setPhoto(img)
-            console.log(image)
         } catch (e) {
             console.log(e)
         }
     }
+    const onSubmit = async (data) => {
+        console.log(data)
+    }
+
+    const formFields: InputProps[] = [
+        {
+            name: 'email',
+            placeholder: 'email',
+            component: <IonInput type="email" />,
+        },
+
+        {
+            name: 'password',
+            component: <IonInput type="password" clearOnEdit={false} />,
+            label: 'Password',
+        },
+    ]
+
     return (
         <IonPage>
             <IonHeader>
@@ -84,50 +106,48 @@ const Prouduct = () => {
                 </IonToolbar>
             </IonHeader>
             <IonContent className="ion-padding">
-                <IonList className=" ">
-                    <IonItem>
-                        <IonInput
-                            placeholder="Product name"
-                            value={name}
-                            onIonChange={(e: any) => setName(e.target.value)}
-                        ></IonInput>
-                    </IonItem>
+                <IonList>
+                    <form onSubmit={handleSubmit(onSubmit)}>
+                        {formFields.map((field, index) => (
+                            <Input {...field} control={control} key={index} />
+                        ))}
+                        {/* <IonItem>
+                            <IonInput placeholder="Product description"></IonInput>
+                        </IonItem>
 
-                    <IonItem>
-                        <IonInput placeholder="Product description"></IonInput>
-                    </IonItem>
+                        <IonItem>
+                            <IonInput placeholder="Product price"></IonInput>
+                        </IonItem> */}
 
-                    <IonItem>
-                        <IonInput placeholder="Product price"></IonInput>
-                    </IonItem>
-
-                    {photo ? (
-                        <IonImg
-                            style={{
-                                border: '1px solid black',
-                                minHeight: '500px',
-                            }}
-                            src={photo}
-                            alt="sosi"
-                        ></IonImg>
-                    ) : (
+                        {photo ? (
+                            <IonImg
+                                style={{
+                                    border: '1px solid black',
+                                    minHeight: '500px',
+                                }}
+                                src={photo}
+                                alt="sosi"
+                            ></IonImg>
+                        ) : (
+                            <IonButton
+                                id="open-action-sheet"
+                                size="small"
+                                expand="full"
+                                // onClick={uploadPhoto}
+                            >
+                                Upload photo
+                            </IonButton>
+                        )}
                         <IonButton
-                            id="open-action-sheet"
-                            size="small"
+                            id="open-toast"
                             expand="full"
-                            // onClick={uploadPhoto}
+                            size="large"
+                            type="submit"
+                            onClick={createProduct}
                         >
-                            Upload photo
+                            Add Product
                         </IonButton>
-                    )}
-                    <IonButton
-                        id="open-toast"
-                        expand="full"
-                        size="large"
-                        onClick={createProduct}
-                    >
-                        Add Product
-                    </IonButton>
+                    </form>
 
                     <IonActionSheet
                         className="my-custom-class"
