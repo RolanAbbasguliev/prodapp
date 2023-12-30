@@ -81,6 +81,11 @@ const QrCode = () => {
                                             size="large"
                                             type="submit"
                                             className="ion-margin-top"
+                                            style={{
+                                                display: scanActive
+                                                    ? 'none'
+                                                    : 'block',
+                                            }}
                                             onClick={startScan}
                                         >
                                             Start Scan
