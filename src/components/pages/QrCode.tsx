@@ -63,6 +63,11 @@ const QrCode = () => {
                 scrollY={false}
                 style={{ backgroundColor: backgroundColor }}
             >
+                {scanActive ? (
+                    <IonButton onClick={stopScan}>Stop Scan</IonButton>
+                ) : (
+                    ''
+                )}
                 <IonGrid fixed>
                     <IonRow className="ion-justify-content-center">
                         <IonCol size="12" sizeMd="8" sizeLg="6" sizeXl="4">
