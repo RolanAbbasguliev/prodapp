@@ -68,6 +68,8 @@ const QrCode = () => {
                 </IonToolbar>
             </IonHeader>
             {scanActive ? (
+                ''
+            ) : (
                 <IonContent className="ion-padding" scrollY={false}>
                     <IonGrid fixed>
                         <IonRow className="ion-justify-content-center">
@@ -93,8 +95,6 @@ const QrCode = () => {
                         </IonRow>
                     </IonGrid>
                 </IonContent>
-            ) : (
-                ''
             )}
         </>
     )
