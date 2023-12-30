@@ -1,12 +1,10 @@
-import { CapacitorConfig } from '@capacitor/cli';
+import { CapacitorConfig } from '@capacitor/cli'
 
 const config: CapacitorConfig = {
-  appId: 'com.example.app',
-  appName: 'prodapp',
-  webDir: 'build',
-  server: {
-    androidScheme: 'https',
-  },
-};
+    appId: 'com.example.app',
+    appName: 'prodapp',
+    webDir: 'build',
+    bundledWebRuntime: false,
+}
 
-export default config;
+export default config
