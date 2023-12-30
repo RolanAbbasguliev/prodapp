@@ -32,7 +32,7 @@ export const getContext = (req: any, rawKey: string) => {
     return reqURL.searchParams.get(key)
 }
 
-export const withContext = (allowedKeys: string[], middleware: TMiddleware) => {
+export const withContext = (allowedKeys: string[], middleware: any) => {
     for (let i = 0; i < allowedKeys.length; i++) {
         allowedKeys[i] = ctxKey(allowedKeys[i])
     }

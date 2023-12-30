@@ -29,12 +29,13 @@ export default async function handler(
                 },
             })
 
-            const token = createToken(user?.id!)
+            const token = await createToken(user?.id!)
             setCookie(req, res, token)
 
             res.status(200).json({ message: 'Success' })
         } catch (e) {
-            res.status(400).json({ message: `Error: ${e}` })
+            console.log(e)
+            return res.status(400).json({ message: `Error: ${e}` })
         }
     } else {
         res.status(400).json({ message: 'Bad request' })

@@ -23,7 +23,7 @@ export default async function handler(
             })
 
             if (!user) {
-                res.status(400).json({ message: 'User not found' })
+                return res.status(400).json({ message: 'User not found' })
             }
 
             const validPassword = await bcrypt.compare(
@@ -32,9 +32,9 @@ export default async function handler(
             )
 
             if (!validPassword) {
-                res.status(400).json({ message: 'Password error' })
+                return res.status(400).json({ message: 'Password error' })
             }
-            const token = createToken(user?.id!)
+            const token = await createToken(user?.id!)
             setCookie(req, res, token)
 
             res.status(200).json({ message: 'Success' })

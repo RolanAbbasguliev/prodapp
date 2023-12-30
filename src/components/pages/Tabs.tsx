@@ -1,34 +1,40 @@
-import { Redirect, Route } from 'react-router-dom';
+import { Redirect, Route } from 'react-router-dom'
 import {
-  IonRouterOutlet,
-  IonTabs,
-  IonTabBar,
-  IonTabButton,
-  IonIcon,
-  IonLabel,
-} from '@ionic/react';
-import { IonReactRouter } from '@ionic/react-router';
-import { cog, flash, list, addCircle } from 'ionicons/icons';
-import Home from './Home';
-import Prouduct from './Prouduct';
+    IonRouterOutlet,
+    IonTabs,
+    IonTabBar,
+    IonTabButton,
+    IonIcon,
+    IonLabel,
+} from '@ionic/react'
+
+import { addCircle, qrCodeOutline } from 'ionicons/icons'
+
+import Product from './Product'
+import QrCode from './QrCode'
 
 const Tabs = () => {
-  return (
-    <IonTabs>
-      <IonRouterOutlet>
-        <Route path="/tabs/feed" render={() => <Home />} exact={true} />
-        <Route path="/tabs/product" render={() => <Prouduct />} exact={true} />
-      </IonRouterOutlet>
-      <IonTabBar slot="bottom">
-        <IonTabButton tab="tab2" href="/tabs/product">
-          <IonIcon icon={addCircle} />
-        </IonTabButton>
-        <IonTabButton tab="tab3" href="/tabs/feed">
-          <IonIcon icon={flash} />
-        </IonTabButton>
-      </IonTabBar>
-    </IonTabs>
-  );
-};
+    return (
+        <IonTabs>
+            <IonTabBar slot="bottom">
+                <IonTabButton tab="product" href="/app/product">
+                    <IonIcon icon={addCircle} />
+                    <IonLabel>Add</IonLabel>
+                </IonTabButton>
 
-export default Tabs;
+                <IonTabButton tab="qrcode" href="/app/qrcode">
+                    <IonIcon icon={qrCodeOutline}></IonIcon>
+                    <IonLabel>Scan</IonLabel>
+                </IonTabButton>
+            </IonTabBar>
+            <IonRouterOutlet>
+                <Redirect path="/app" to="/app/product" exact />
+
+                <Route path="/app/product" component={Product} exact />
+                <Route path="/app/qrcode" component={QrCode} exact />
+            </IonRouterOutlet>
+        </IonTabs>
+    )
+}
+
+export default Tabs

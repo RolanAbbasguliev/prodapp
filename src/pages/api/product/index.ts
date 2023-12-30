@@ -9,6 +9,8 @@ import fs from 'fs'
 import { s3 } from '@/s3/s3'
 import { v4 as uuidv4 } from 'uuid'
 import { getContext } from '@/utilities/contentx'
+import * as jose from 'jose'
+import { cookieGetUserId } from '../../../utilities/utils'
 
 export const config = {
     api: {
@@ -24,62 +26,52 @@ export default async function handler(
 ) {
     if (req.method === 'POST') {
         try {
-            const userId = getContext(req, 'token')
-            // const { name, description, price, image } = JSON.parse(req.body)
+            const userId = await cookieGetUserId(req)
 
-            // const base64 = image.split(';base64,').pop()
-            // const buf = Buffer.from(base64, 'base64')
-            // const imageId = uuidv4()
+            if (!userId) {
+                res.status(400).json({ message: 'User not found' })
+            }
 
-            // await prisma.product.create({
-            //     data: {
-            //         name: name,
-            //         description: description,
-            //         price: price,
-            //         creatorId: 1,
-            //         s3ImageId: imageId,
-            //     },
-            // })
+            let { name, description, price, image } = JSON.parse(req.body)
 
-            // let upload = await s3.Upload(
-            //     {
-            //         buffer: buf,
-            //         name: 'image.jpeg',
-            //     },
-            //     '/test'
-            // )
+            price = Number(price)
 
-            // res.status(200).json({ foo: getContext(req, 'foo') })
+            if (image) {
+                let imageId = uuidv4()
+                await prisma.product.create({
+                    data: {
+                        name: name,
+                        description: description,
+                        price: price,
+                        creatorId: userId!,
+                        s3ImageId: imageId,
+                    },
+                })
 
-            // await prisma.product.create({
-            //     data: {
-            //         name: name,
-            //         description: description,
-            //         price: price,
-            //         creatorId: id,
-            //     },
-            // })
+                const base64 = image.split(';base64,').pop()
+                const buf = Buffer.from(base64, 'base64')
 
-            // console.log
+                let upload = await s3.Upload(
+                    {
+                        buffer: buf,
+                        name: `${imageId}.jpeg`,
+                    },
+                    `${userId}/`
+                )
+            }
 
-            // let upload = await s3.Upload(
-            //     {
-            //         buffer: buf,
-            //         name: 'sosi.jpeg',
-            //     },
-            //     '/test/'
-            // )
-
-            // console.log(upload)
+            await prisma.product.create({
+                data: {
+                    name: name,
+                    description: description,
+                    price: price,
+                    creatorId: userId!,
+                    s3ImageId: '',
+                },
+            })
         } catch (e) {
-            console.log(e)
+            res.status(400).json({ message: 'User not found' })
         }
-
-        // console.log(data)
-
-        // const { id, name, price, description } = req.body
-
-        // console.log(req, 'FILE')
     }
     res.status(200).json({ name: 'index' })
 }
