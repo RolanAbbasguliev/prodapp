@@ -60,34 +60,42 @@ const QrCode = () => {
             <IonHeader>
                 <IonToolbar color="dark">
                     <IonTitle className="ion-text-center">Scanner</IonTitle>
-                    <IonButton onClick={stopScan}>Stop Scan</IonButton>
+                    {scanActive ? (
+                        <IonButton onClick={stopScan}>Stop Scan</IonButton>
+                    ) : (
+                        ''
+                    )}
                 </IonToolbar>
             </IonHeader>
-            <IonContent className="ion-padding" scrollY={false}>
-                <IonGrid fixed>
-                    <IonRow className="ion-justify-content-center">
-                        <IonCol size="12" sizeMd="8" sizeLg="6" sizeXl="4">
-                            <IonCard>
-                                <IonCardContent>
-                                    <IonButton
-                                        expand="block"
-                                        size="large"
-                                        type="submit"
-                                        className="ion-margin-top"
-                                        onClick={startScan}
-                                    >
-                                        Start Scan
-                                        <IonIcon
-                                            icon={cameraOutline}
-                                            slot="end"
-                                        ></IonIcon>
-                                    </IonButton>
-                                </IonCardContent>
-                            </IonCard>
-                        </IonCol>
-                    </IonRow>
-                </IonGrid>
-            </IonContent>
+            {scanActive ? (
+                <IonContent className="ion-padding" scrollY={false}>
+                    <IonGrid fixed>
+                        <IonRow className="ion-justify-content-center">
+                            <IonCol size="12" sizeMd="8" sizeLg="6" sizeXl="4">
+                                <IonCard>
+                                    <IonCardContent>
+                                        <IonButton
+                                            expand="block"
+                                            size="large"
+                                            type="submit"
+                                            className="ion-margin-top"
+                                            onClick={startScan}
+                                        >
+                                            Start Scan
+                                            <IonIcon
+                                                icon={cameraOutline}
+                                                slot="end"
+                                            ></IonIcon>
+                                        </IonButton>
+                                    </IonCardContent>
+                                </IonCard>
+                            </IonCol>
+                        </IonRow>
+                    </IonGrid>
+                </IonContent>
+            ) : (
+                ''
+            )}
         </>
     )
 }
