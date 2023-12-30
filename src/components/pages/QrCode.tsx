@@ -12,15 +12,17 @@ import {
     IonCol,
     IonButton,
     IonIcon,
+    useIonRouter,
 } from '@ionic/react'
-import { cameraOutline } from 'ionicons/icons'
+import { cameraOutline, scanOutline } from 'ionicons/icons'
 import { BarcodeScanner } from '@capacitor-community/barcode-scanner'
 import { useEffect, useState } from 'react'
-import { QRCodeSVG } from 'qrcode.react'
 
 const QrCode = () => {
     const [scanData, setScanData] = useState('')
     const [scanActive, setScanActive] = useState(false)
+
+    const router = useIonRouter()
 
     const hideBackgroundMe = () => {
         document.querySelector('body')?.classList.add('scanner-active')
@@ -30,8 +32,9 @@ const QrCode = () => {
         document.querySelector('body')?.classList.remove('scanner-active')
     }
     const startScan = async () => {
+        setScanActive(true)
         // Check camera permission
-        // // This is just a simple example, check out the better checks below
+        // This is just a simple example, check out the better checks below
         // await BarcodeScanner.checkPermission({ force: true })
 
         // // make background of WebView transparent
@@ -40,11 +43,11 @@ const QrCode = () => {
         // hideBackgroundMe()
 
         // const result = await BarcodeScanner.startScan() // start scanning and wait for a result
-        setScanActive(true)
 
-        // if the result has content
+        // // if the result has content
         // if (result.hasContent) {
         //     setScanData(result.content)
+        //     router.push('/app/show')
         // }
     }
 
@@ -94,10 +97,10 @@ const QrCode = () => {
                                         onClick={startScan}
                                     >
                                         Start Scan
-                                        {/* <IonIcon
-                                            icon={cameraOutline}
+                                        <IonIcon
+                                            icon={scanOutline}
                                             slot="end"
-                                        ></IonIcon> */}
+                                        ></IonIcon>
                                     </IonButton>
                                 </IonCardContent>
                             </IonCard>
