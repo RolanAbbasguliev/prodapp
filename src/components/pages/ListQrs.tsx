@@ -19,11 +19,19 @@ import { useEffect, useState } from 'react'
 import { QRCodeSVG } from 'qrcode.react'
 
 const ListQrs = () => {
-    const [imgId, setImgId] = useState([''])
- 
+    const [s3imgArr, setS3ImgArr] = useState([''])
 
-    const fetchImg = async () => {}
-    useEffect(() => {}, [])
+    const fetchImg = async () => {
+        try {
+            const res = await fetch('/api/product')
+            setS3ImgArr(await res.json())
+        } catch (e) {
+            console.log(e)
+        }
+    }
+    useEffect(() => {
+        fetchImg()
+    }, [])
     return (
         <>
             <IonHeader>
@@ -35,13 +43,27 @@ const ListQrs = () => {
                 <IonGrid fixed>
                     <IonRow className="ion-justify-content-center">
                         <IonCol size="12" sizeMd="8" sizeLg="6" sizeXl="4">
-                            <IonCard>
-                                <IonCardContent>
-                                    <IonButton>
-                                        <QRCodeSVG value="sosi"></QRCodeSVG>
-                                    </IonButton>
-                                </IonCardContent>
-                            </IonCard>
+                            {s3imgArr ? (
+                                s3imgArr.map((id) => {
+                                    return (
+                                        <IonCardContent
+                                            key={id}
+                                            className="ion-text-center"
+                                        >
+                                            <IonCard className="ion-margin-top ion-padding ion-text-center ">
+                                                <QRCodeSVG
+                                                    value={id}
+                                                ></QRCodeSVG>
+                                                <h1 className="ion-padding">
+                                                    SCAN ME
+                                                </h1>
+                                            </IonCard>
+                                        </IonCardContent>
+                                    )
+                                })
+                            ) : (
+                                <h1>No product</h1>
+                            )}
                         </IonCol>
                     </IonRow>
                 </IonGrid>

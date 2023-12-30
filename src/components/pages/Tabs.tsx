@@ -30,7 +30,7 @@ const Tabs = () => {
 
                 <IonTabButton tab="list-qrs" href="/app/list-qrs">
                     <IonIcon icon={listOutline}></IonIcon>
-                    <IonLabel>Scan</IonLabel>
+                    <IonLabel>QRCode List</IonLabel>
                 </IonTabButton>
             </IonTabBar>
             <IonRouterOutlet>

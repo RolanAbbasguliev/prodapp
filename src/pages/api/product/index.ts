@@ -73,5 +73,28 @@ export default async function handler(
             res.status(400).json({ message: 'User not found' })
         }
     }
-    res.status(200).json({ name: 'index' })
+    if (req.method === 'GET') {
+        try {
+            const userId = await cookieGetUserId(req)
+
+            const imgs = await prisma.product.findMany({
+                where: {
+                    creatorId: userId,
+                },
+                select: {
+                    s3ImageId: true,
+                },
+            })
+
+            const s3ImgIdArr: string[] = []
+            const arr = imgs.filter((img) => img.s3ImageId !== '')
+
+            arr.map((img) => s3ImgIdArr.push(img.s3ImageId!))
+
+            res.status(200).json(s3ImgIdArr)
+        } catch (e) {
+            res.status(400).json({ message: 'User not found' })
+        }
+    }
+    res.status(400)
 }

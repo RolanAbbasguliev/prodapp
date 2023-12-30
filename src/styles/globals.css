@@ -1,21 +1,4 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-/* ion-action-sheet.my-custom-class {
-  --background: #f58840;
-  --backdrop-opacity: 0.6;
-  --button-background-selected: #e97223;
-  --button-color: #000000;
-  --color: #fff;
-
-  --ion-color-danger: #000000;
-} */
-/* 
-:root {
-  --ion-background-color: #0f172a;
-  --ion-toolbar-background: #e97223;
-  --ion-text-color: white;
-  --ion-placeholder-color: white;
-  --ion-tab-bar-color-selected: #e97223;
-} */
+body.scanner-active {
+    --background: transparent;
+    --ion-background-color: transparent;
+}

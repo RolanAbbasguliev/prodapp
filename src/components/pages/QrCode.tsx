@@ -19,7 +19,9 @@ import { useEffect, useState } from 'react'
 import { QRCodeSVG } from 'qrcode.react'
 
 const QrCode = () => {
-    const [data, setData] = useState('')
+    const [scanData, setScanData] = useState('')
+    const [scanActive, setScanActive] = useState(false)
+    const [backgroundColor, setBackgroundColor] = useState('#fff')
     const startScan = async () => {
         // Check camera permission
         // This is just a simple example, check out the better checks below
@@ -30,17 +32,20 @@ const QrCode = () => {
         BarcodeScanner.hideBackground()
 
         const result = await BarcodeScanner.startScan() // start scanning and wait for a result
+        setScanActive(true)
+        setBackgroundColor('#000000000')
 
         // if the result has content
         if (result.hasContent) {
-            setData(result.content)
-            console.log(result.content) // log the raw scanned content
+            setScanData(result.content)
         }
     }
 
     const stopScan = () => {
         BarcodeScanner.showBackground()
         BarcodeScanner.stopScan()
+        setScanActive(false)
+        setBackgroundColor('#fff')
     }
 
     useEffect(() => {
@@ -53,7 +58,11 @@ const QrCode = () => {
                     <IonTitle className="ion-text-center">Scanner</IonTitle>
                 </IonToolbar>
             </IonHeader>
-            <IonContent className="ion-padding" scrollY={false}>
+            <IonContent
+                className="ion-padding"
+                scrollY={false}
+                style={{ backgroundColor: backgroundColor }}
+            >
                 <IonGrid fixed>
                     <IonRow className="ion-justify-content-center">
                         <IonCol size="12" sizeMd="8" sizeLg="6" sizeXl="4">
@@ -72,10 +81,6 @@ const QrCode = () => {
                                             slot="end"
                                         ></IonIcon>
                                     </IonButton>
-                                    <IonButton>
-                                        <QRCodeSVG value="sosi"></QRCodeSVG>
-                                    </IonButton>
-                                    <IonButton>{data}</IonButton>
                                 </IonCardContent>
                             </IonCard>
                         </IonCol>
