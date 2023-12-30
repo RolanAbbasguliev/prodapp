@@ -31,21 +31,21 @@ const QrCode = () => {
     }
     const startScan = async () => {
         // Check camera permission
-        // This is just a simple example, check out the better checks below
-        await BarcodeScanner.checkPermission({ force: true })
+        // // This is just a simple example, check out the better checks below
+        // await BarcodeScanner.checkPermission({ force: true })
 
-        // make background of WebView transparent
-        // note: if you are using ionic this might not be enough, check below
-        BarcodeScanner.hideBackground()
-        hideBackgroundMe()
+        // // make background of WebView transparent
+        // // note: if you are using ionic this might not be enough, check below
+        // BarcodeScanner.hideBackground()
+        // hideBackgroundMe()
 
-        const result = await BarcodeScanner.startScan() // start scanning and wait for a result
+        // const result = await BarcodeScanner.startScan() // start scanning and wait for a result
         setScanActive(true)
 
         // if the result has content
-        if (result.hasContent) {
-            setScanData(result.content)
-        }
+        // if (result.hasContent) {
+        //     setScanData(result.content)
+        // }
     }
 
     const stopScan = () => {
@@ -60,47 +60,51 @@ const QrCode = () => {
             <IonHeader>
                 <IonToolbar color="dark">
                     <IonTitle className="ion-text-center">Scanner</IonTitle>
-                    {scanActive ? (
-                        <IonButton onClick={stopScan}>Stop Scan</IonButton>
-                    ) : (
-                        ''
-                    )}
+
+                    <IonButton
+                        slot="end"
+                        onClick={stopScan}
+                        size="default"
+                        color="light"
+                        style={{
+                            display: scanActive ? 'block' : 'none',
+                        }}
+                    >
+                        Stop Scan
+                    </IonButton>
                 </IonToolbar>
             </IonHeader>
-            {scanActive ? (
-                ''
-            ) : (
-                <IonContent className="ion-padding" scrollY={false}>
-                    <IonGrid fixed>
-                        <IonRow className="ion-justify-content-center">
-                            <IonCol size="12" sizeMd="8" sizeLg="6" sizeXl="4">
-                                <IonCard>
-                                    <IonCardContent>
-                                        <IonButton
-                                            expand="block"
-                                            size="large"
-                                            type="submit"
-                                            className="ion-margin-top"
-                                            style={{
-                                                display: scanActive
-                                                    ? 'none'
-                                                    : 'block',
-                                            }}
-                                            onClick={startScan}
-                                        >
-                                            Start Scan
-                                            <IonIcon
-                                                icon={cameraOutline}
-                                                slot="end"
-                                            ></IonIcon>
-                                        </IonButton>
-                                    </IonCardContent>
-                                </IonCard>
-                            </IonCol>
-                        </IonRow>
-                    </IonGrid>
-                </IonContent>
-            )}
+
+            <IonContent className="ion-padding" scrollY={false}>
+                <IonGrid fixed>
+                    <IonRow className="ion-justify-content-center">
+                        <IonCol size="12" sizeMd="8" sizeLg="6" sizeXl="4">
+                            <IonCard>
+                                <IonCardContent>
+                                    <IonButton
+                                        expand="block"
+                                        size="large"
+                                        type="submit"
+                                        className="ion-margin-top"
+                                        style={{
+                                            display: scanActive
+                                                ? 'none'
+                                                : 'block',
+                                        }}
+                                        onClick={startScan}
+                                    >
+                                        Start Scan
+                                        {/* <IonIcon
+                                            icon={cameraOutline}
+                                            slot="end"
+                                        ></IonIcon> */}
+                                    </IonButton>
+                                </IonCardContent>
+                            </IonCard>
+                        </IonCol>
+                    </IonRow>
+                </IonGrid>
+            </IonContent>
         </>
     )
 }
