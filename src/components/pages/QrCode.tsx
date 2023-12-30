@@ -21,7 +21,14 @@ import { QRCodeSVG } from 'qrcode.react'
 const QrCode = () => {
     const [scanData, setScanData] = useState('')
     const [scanActive, setScanActive] = useState(false)
-    const [opacity, setOpacity] = useState(100)
+
+    const hideBackgroundMe = () => {
+        document.querySelector('body')?.classList.add('scanner-active')
+    }
+
+    const showBackground = () => {
+        document.querySelector('body')?.classList.remove('scanner-active')
+    }
     const startScan = async () => {
         // Check camera permission
         // This is just a simple example, check out the better checks below
@@ -30,10 +37,10 @@ const QrCode = () => {
         // make background of WebView transparent
         // note: if you are using ionic this might not be enough, check below
         BarcodeScanner.hideBackground()
+        hideBackgroundMe()
 
         const result = await BarcodeScanner.startScan() // start scanning and wait for a result
         setScanActive(true)
-        setOpacity(0)
 
         // if the result has content
         if (result.hasContent) {
@@ -42,32 +49,21 @@ const QrCode = () => {
     }
 
     const stopScan = () => {
+        showBackground()
         BarcodeScanner.showBackground()
         BarcodeScanner.stopScan()
         setScanActive(false)
-        setOpacity(100)
     }
 
-    useEffect(() => {
-        return stopScan()
-    }, [])
     return (
         <>
             <IonHeader>
                 <IonToolbar color="dark">
                     <IonTitle className="ion-text-center">Scanner</IonTitle>
+                    <IonButton onClick={stopScan}>Stop Scan</IonButton>
                 </IonToolbar>
             </IonHeader>
-            <IonContent
-                className="ion-padding"
-                scrollY={false}
-                style={{ opacity: opacity }}
-            >
-                {scanActive ? (
-                    <IonButton onClick={stopScan}>Stop Scan</IonButton>
-                ) : (
-                    ''
-                )}
+            <IonContent className="ion-padding" scrollY={false}>
                 <IonGrid fixed>
                     <IonRow className="ion-justify-content-center">
                         <IonCol size="12" sizeMd="8" sizeLg="6" sizeXl="4">
