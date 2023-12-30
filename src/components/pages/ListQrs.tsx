@@ -19,7 +19,7 @@ import { useEffect, useState } from 'react'
 import { QRCodeSVG } from 'qrcode.react'
 
 const ListQrs = () => {
-    const [s3imgArr, setS3ImgArr] = useState([''])
+    const [s3imgArr, setS3ImgArr] = useState([])
 
     const fetchImg = async () => {
         try {

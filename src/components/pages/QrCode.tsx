@@ -21,7 +21,7 @@ import { QRCodeSVG } from 'qrcode.react'
 const QrCode = () => {
     const [scanData, setScanData] = useState('')
     const [scanActive, setScanActive] = useState(false)
-    const [backgroundColor, setBackgroundColor] = useState('#fff')
+    const [opacity, setOpacity] = useState(100)
     const startScan = async () => {
         // Check camera permission
         // This is just a simple example, check out the better checks below
@@ -33,7 +33,7 @@ const QrCode = () => {
 
         const result = await BarcodeScanner.startScan() // start scanning and wait for a result
         setScanActive(true)
-        setBackgroundColor('#000000000')
+        setOpacity(0)
 
         // if the result has content
         if (result.hasContent) {
@@ -45,7 +45,7 @@ const QrCode = () => {
         BarcodeScanner.showBackground()
         BarcodeScanner.stopScan()
         setScanActive(false)
-        setBackgroundColor('#fff')
+        setOpacity(100)
     }
 
     useEffect(() => {
@@ -61,7 +61,7 @@ const QrCode = () => {
             <IonContent
                 className="ion-padding"
                 scrollY={false}
-                style={{ backgroundColor: backgroundColor }}
+                style={{ opacity: opacity }}
             >
                 {scanActive ? (
                     <IonButton onClick={stopScan}>Stop Scan</IonButton>
