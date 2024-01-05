@@ -12,6 +12,7 @@ import {
     IonCol,
     IonButton,
     IonIcon,
+    useIonRouter,
 } from '@ionic/react'
 import { cameraOutline } from 'ionicons/icons'
 import { BarcodeScanner } from '@capacitor-community/barcode-scanner'
@@ -20,6 +21,7 @@ import { QRCodeSVG } from 'qrcode.react'
 
 const ListQrs = () => {
     const [s3imgArr, setS3ImgArr] = useState([])
+    const router = useIonRouter()
 
     const fetchImg = async () => {
         try {
@@ -29,6 +31,7 @@ const ListQrs = () => {
             console.log(e)
         }
     }
+    
     useEffect(() => {
         fetchImg()
     }, [])
@@ -39,7 +42,7 @@ const ListQrs = () => {
                     <IonTitle className="ion-text-center">Scanner</IonTitle>
                 </IonToolbar>
             </IonHeader>
-            <IonContent className="ion-padding" scrollY={false}>
+            <IonContent className="ion-padding">
                 <IonGrid fixed>
                     <IonRow className="ion-justify-content-center">
                         <IonCol size="12" sizeMd="8" sizeLg="6" sizeXl="4">
@@ -47,10 +50,13 @@ const ListQrs = () => {
                                 s3imgArr.map((id) => {
                                     return (
                                         <IonCardContent
+                                            onClick={() =>
+                                                router.push(`/app/show/${id}`)
+                                            }
                                             key={id}
-                                            className="ion-text-center"
+                                            className="ion-text-center  ion-margin-bottom "
                                         >
-                                            <IonCard className="ion-margin-top ion-padding ion-text-center ">
+                                            <IonCard className="ion-padding ion-text-center ">
                                                 <QRCodeSVG
                                                     value={id}
                                                 ></QRCodeSVG>

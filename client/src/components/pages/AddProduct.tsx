@@ -16,6 +16,7 @@ import {
     IonTitle,
     IonToast,
     IonToolbar,
+    useIonRouter,
 } from '@ionic/react'
 import React, { useEffect, useState } from 'react'
 import { Preferences } from '@capacitor/preferences'
@@ -25,12 +26,14 @@ import { ErrorMessage } from '@hookform/error-message'
 import { useForm } from 'react-hook-form'
 import { documentOutline, downloadOutline, imagesOutline } from 'ionicons/icons'
 
-const Product = () => {
+const AddProduct = () => {
     const {
         register,
         handleSubmit,
         formState: { errors },
     } = useForm()
+
+    const router = useIonRouter()
 
     const [photo, setPhoto] = useState('')
 
@@ -188,4 +191,4 @@ const Product = () => {
     )
 }
 
-export default Product
+export default AddProduct

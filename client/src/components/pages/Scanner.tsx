@@ -17,9 +17,9 @@ import {
 import { cameraOutline, scanOutline } from 'ionicons/icons'
 import { BarcodeScanner } from '@capacitor-community/barcode-scanner'
 import { useEffect, useState } from 'react'
+import { Preferences } from '@capacitor/preferences'
 
-const QrCode = () => {
-    const [scanData, setScanData] = useState('')
+const Scanner = () => {
     const [scanActive, setScanActive] = useState(false)
 
     const router = useIonRouter()
@@ -31,24 +31,21 @@ const QrCode = () => {
     const showBackground = () => {
         document.querySelector('body')?.classList.remove('scanner-active')
     }
+
     const startScan = async () => {
         setScanActive(true)
         // Check camera permission
         // This is just a simple example, check out the better checks below
-        // await BarcodeScanner.checkPermission({ force: true })
+        await BarcodeScanner.checkPermission({ force: true })
 
-        // // make background of WebView transparent
-        // // note: if you are using ionic this might not be enough, check below
-        // BarcodeScanner.hideBackground()
-        // hideBackgroundMe()
+        BarcodeScanner.hideBackground()
+        hideBackgroundMe()
 
-        // const result = await BarcodeScanner.startScan() // start scanning and wait for a result
+        const result = await BarcodeScanner.startScan() // start scanning and wait for a result
 
-        // // if the result has content
-        // if (result.hasContent) {
-        //     setScanData(result.content)
-        //     router.push('/app/show')
-        // }
+        if (result.hasContent) {
+            router.push(`/app/show/${result.content}`)
+        }
     }
 
     const stopScan = () => {
@@ -112,4 +109,4 @@ const QrCode = () => {
     )
 }
 
-export default QrCode
+export default Scanner

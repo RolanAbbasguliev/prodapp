@@ -59,17 +59,9 @@ export default async function handler(
                     `${userId}/`
                 )
             }
-
-            await prisma.product.create({
-                data: {
-                    name: name,
-                    description: description,
-                    price: price,
-                    creatorId: userId!,
-                    s3ImageId: '',
-                },
-            })
+            res.status(200).json({ message: 'Product successfully created' })
         } catch (e) {
+            console.log(e)
             res.status(400).json({ message: 'User not found' })
         }
     }
@@ -96,5 +88,5 @@ export default async function handler(
             res.status(400).json({ message: 'User not found' })
         }
     }
-    res.status(400)
+    res.status(400).send('')
 }

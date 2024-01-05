@@ -7,8 +7,9 @@ import { defineCustomElements } from '@ionic/pwa-elements/loader'
 import Login from './pages/Login'
 import Registration from './pages/Registration'
 
-import Product from './pages/Product'
-import QrCode from './pages/QrCode'
+import Product from './pages/AddProduct'
+import QrCode from './pages/Scanner'
+import ShowProduct from './pages/ShowProduct'
 defineCustomElements(window)
 const AppShell = () => {
     return (
@@ -22,6 +23,7 @@ const AppShell = () => {
                         exact
                     />
                     <Route path="/app" component={Tabs} />
+                    <Route path="/app/show" component={ShowProduct} />
                 </IonRouterOutlet>
             </IonReactRouter>
         </IonApp>
