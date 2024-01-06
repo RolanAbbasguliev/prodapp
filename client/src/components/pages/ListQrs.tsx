@@ -26,20 +26,29 @@ const ListQrs = () => {
     const fetchImg = async () => {
         try {
             const res = await fetch('/api/product')
-            setS3ImgArr(await res.json())
+            const json = await res.json()
+            if (json.length > 0) {
+                setS3ImgArr(json)
+            }
+
+            console.log('WTF')
         } catch (e) {
             console.log(e)
         }
     }
 
     useEffect(() => {
-        fetchImg()
+        console.log('render')
+    })
+
+    useEffect(() => {
+        fetchImg().then(() => console.log(s3imgArr))
     }, [])
     return (
         <>
             <IonHeader>
                 <IonToolbar color="dark">
-                    <IonTitle className="ion-text-center">Scanner</IonTitle>
+                    <IonTitle className="ion-text-center">QRCode List</IonTitle>
                 </IonToolbar>
             </IonHeader>
             <IonContent className="ion-padding">
@@ -56,7 +65,7 @@ const ListQrs = () => {
                                             key={id}
                                             className="ion-text-center ion-margins"
                                         >
-                                            <IonCardContent className=" ion-text-center    ">
+                                            <IonCardContent className="ion-text-center">
                                                 <QRCodeSVG
                                                     value={id}
                                                 ></QRCodeSVG>
@@ -69,8 +78,9 @@ const ListQrs = () => {
                                 })
                             ) : (
                                 <IonCard>
-                                    <h1>SOSIi</h1>
-                                    <IonCardContent>No Product</IonCardContent>
+                                    <IonCardContent className="ion-text-center">
+                                        PRODUCT NOT FOUND
+                                    </IonCardContent>
                                 </IonCard>
                             )}
                         </IonCol>

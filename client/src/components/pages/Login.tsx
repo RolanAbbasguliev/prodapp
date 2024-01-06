@@ -18,13 +18,18 @@ import {
     IonGrid,
     IonRow,
     IonCol,
+    IonToast,
 } from '@ionic/react'
 import { useForm } from 'react-hook-form'
 import { ErrorMessage } from '@hookform/error-message'
 import { TextFieldTypes } from '../../interfaces/interfaces'
 import { logInOutline, personCircleOutline } from 'ionicons/icons'
+import { useState } from 'react'
 
 const Login = () => {
+    const [isOpen, setIsOpen] = useState(false)
+    const [message, setMessage] = useState('')
+    const [reqSuccess, setReqSuccess] = useState(false)
     const router = useIonRouter()
     const {
         register,
@@ -45,10 +50,10 @@ const Login = () => {
             label: 'Password',
         },
     ]
-    
 
     const onSubmit = async (data: any) => {
         try {
+            setIsOpen(true)
             const res = await fetch('/api/auth/login', {
                 method: 'POST',
                 headers: {
@@ -57,7 +62,13 @@ const Login = () => {
                 body: JSON.stringify(data),
             })
 
-            if (res.status === 200) router.push('/app')
+            const message = (await res.json()).message
+            setMessage(message)
+
+            if (res.status === 200) {
+                setReqSuccess(true)
+                router.push('/app')
+            }
         } catch (e) {
             console.log(e)
         }
@@ -149,6 +160,13 @@ const Login = () => {
                     </IonRow>
                 </IonGrid>
             </IonContent>
+            <IonToast
+                color={reqSuccess ? 'success' : 'danger'}
+                isOpen={isOpen}
+                message={message}
+                onDidDismiss={() => setIsOpen(false)}
+                duration={2000}
+            ></IonToast>
         </IonPage>
     )
 }

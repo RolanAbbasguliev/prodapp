@@ -37,7 +37,7 @@ export default async function handler(
             const token = await createToken(user?.id!)
             setCookie(req, res, token)
 
-            res.status(200).json({ message: 'Success' })
+            res.status(200).json({ message: 'Login success' })
         } catch (e) {
             console.log(e)
             res.status(400).json({ message: 'Error' })

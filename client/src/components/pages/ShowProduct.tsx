@@ -221,15 +221,6 @@ const ShowProduct = () => {
                                             </IonButton>
                                         </form>
                                     </IonCardTitle>
-                                    {/* <IonCardTitle>
-                                        Name: {product?.name}
-                                    </IonCardTitle>
-                                    <IonCardTitle>
-                                        Description: {product?.description}
-                                    </IonCardTitle>
-                                    <IonCardTitle>
-                                        Price: {product?.price}
-                                    </IonCardTitle> */}
                                 </IonCardHeader>
                                 <IonCardContent className="ion-padding"></IonCardContent>
                             </IonCard>
