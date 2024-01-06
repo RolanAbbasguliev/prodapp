@@ -18,7 +18,12 @@ import {
     IonCardTitle,
     IonInput,
 } from '@ionic/react'
-import { cameraOutline, refreshOutline, scanOutline } from 'ionicons/icons'
+import {
+    cameraOutline,
+    refreshOutline,
+    scanOutline,
+    trashOutline,
+} from 'ionicons/icons'
 import { BarcodeScanner } from '@capacitor-community/barcode-scanner'
 import { useEffect, useState } from 'react'
 import { Preferences } from '@capacitor/preferences'
@@ -37,6 +42,7 @@ const ShowProduct = () => {
     const [imageId, setImageId] = useState('')
     const [image, setImage] = useState('')
     const [product, setProduct] = useState<Product>()
+    const router = useIonRouter()
 
     const downloadImage = async (id: string) => {
         const data = {
@@ -92,7 +98,7 @@ const ShowProduct = () => {
     const onSubmit = async (data: Record<string, string>) => {
         try {
             data.imageId = imageId
-            console.log(data)
+
             const res = await fetch('/api/product', {
                 method: 'PUT',
                 headers: {
@@ -100,6 +106,27 @@ const ShowProduct = () => {
                 },
                 body: JSON.stringify(data),
             })
+        } catch (e) {
+            console.log(e)
+        }
+    }
+
+    const onDelete = async () => {
+        try {
+            const data = {
+                imageId: imageId,
+            }
+            const res = await fetch('/api/product', {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            })
+
+            if (res.status === 200) {
+                router.push('/app/addProduct')
+            }
         } catch (e) {
             console.log(e)
         }
@@ -176,6 +203,19 @@ const ShowProduct = () => {
                                                 Update
                                                 <IonIcon
                                                     icon={refreshOutline}
+                                                    slot="end"
+                                                />
+                                            </IonButton>
+                                            <IonButton
+                                                onClick={onDelete}
+                                                color="danger"
+                                                size="default"
+                                                expand="block"
+                                                className="ion-margin-top"
+                                            >
+                                                Delete
+                                                <IonIcon
+                                                    icon={trashOutline}
                                                     slot="end"
                                                 />
                                             </IonButton>

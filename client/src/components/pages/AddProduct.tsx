@@ -54,6 +54,9 @@ const AddProduct = () => {
     }
     const onSubmit = async (data: Record<string, string>) => {
         try {
+            if (!photo) {
+                return
+            }
             data.image = photo
 
             const res = await fetch('/api/product', {
@@ -162,9 +165,10 @@ const AddProduct = () => {
                                                 onClick={uploadPhoto}
                                                 className="ion-margin-top"
                                             >
+                                                Limit 4mb
                                                 <IonIcon
                                                     icon={imagesOutline}
-                                                    slot="start"
+                                                    slot="end"
                                                 />
                                             </IonButton>
                                         )}

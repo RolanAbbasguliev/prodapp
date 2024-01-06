@@ -110,5 +110,31 @@ export default async function handler(
             res.status(400).json({ message: 'UPDATE product failed' })
         }
     }
+
+    if (req.method === 'DELETE') {
+        try {
+            const userId = await cookieGetUserId(req)
+            const { imageId } = req.body
+
+            const deleteS3 = await s3.Remove(`${userId}/${imageId}`)
+            if (!deleteS3) {
+                res.status(400).json({
+                    message: 'S3 storage error please try again',
+                })
+            }
+
+            const deleteProd = await prisma.product.delete({
+                where: {
+                    creatorId: userId,
+                    s3ImageId: imageId,
+                },
+            })
+
+            res.status(200).json({ message: 'Product successfully deleted' })
+        } catch (e) {
+            res.status(400).json({ message: 'DELETE product failed' })
+            console.log(e)
+        }
+    }
     res.status(400).json({ message: 'Bad Request' })
 }
