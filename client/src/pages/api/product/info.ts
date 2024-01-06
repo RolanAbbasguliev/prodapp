@@ -1,7 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-
 import { cookieGetUserId } from '../../../utilities/utils'
-import { s3 } from '@/s3/s3'
+import prisma from '@/db/db'
 
 export default async function handler(
     req: NextApiRequest,
@@ -12,18 +11,20 @@ export default async function handler(
             const userId = await cookieGetUserId(req)
             const { imageId } = JSON.parse(req.body)
 
-            const download = (await s3.Download(
-                `${userId}/${imageId}.jpeg`
-            )) as any
-
-            if (!imageId) {
-                res.status(400).json({ message: 'Image id not provided' })
+            const product = await prisma.product.findUnique({
+                where: {
+                    s3ImageId: imageId,
+                    creatorId: userId,
+                },
+            })
+            if (!product) {
+                res.status(400).json({ message: 'Product not found' })
             }
-            res.setHeader('Content-Type', 'application/octet-stream')
-            res.send(download.data.Body)
+
+            res.status(200).json(product)
         } catch (e) {
             console.log(e)
-            res.status(400).json({ message: 'Download product image failed' })
+            res.status(400).json({ message: 'GET product info failed' })
         }
     } else {
         res.status(400).json({ message: 'Bad Request' })

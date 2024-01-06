@@ -31,7 +31,7 @@ const ListQrs = () => {
             console.log(e)
         }
     }
-    
+
     useEffect(() => {
         fetchImg()
     }, [])
@@ -44,27 +44,27 @@ const ListQrs = () => {
             </IonHeader>
             <IonContent className="ion-padding">
                 <IonGrid fixed>
-                    <IonRow className="ion-justify-content-center">
+                    <IonRow className="ion-justify-content-center ">
                         <IonCol size="12" sizeMd="8" sizeLg="6" sizeXl="4">
                             {s3imgArr ? (
                                 s3imgArr.map((id) => {
                                     return (
-                                        <IonCardContent
+                                        <IonCard
                                             onClick={() =>
                                                 router.push(`/app/show/${id}`)
                                             }
                                             key={id}
-                                            className="ion-text-center  ion-margin-bottom "
+                                            className="ion-text-center ion-margins"
                                         >
-                                            <IonCard className="ion-padding ion-text-center ">
+                                            <IonCardContent className=" ion-text-center    ">
                                                 <QRCodeSVG
                                                     value={id}
                                                 ></QRCodeSVG>
                                                 <h1 className="ion-padding">
                                                     SCAN ME
                                                 </h1>
-                                            </IonCard>
-                                        </IonCardContent>
+                                            </IonCardContent>
+                                        </IonCard>
                                     )
                                 })
                             ) : (

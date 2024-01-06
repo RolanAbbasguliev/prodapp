@@ -19,11 +19,11 @@ model User {
 }
 
 model Product {
-  id          Int     @id @default(autoincrement())
+  id          Int    @id @default(autoincrement())
   name        String
   description String
   price       Int
-  s3ImageId   String? @unique
-  creator     User    @relation(fields: [creatorId], references: [id])
+  s3ImageId   String @unique
+  creator     User   @relation(fields: [creatorId], references: [id])
   creatorId   Int
 }

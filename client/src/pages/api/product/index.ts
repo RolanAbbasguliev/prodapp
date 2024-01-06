@@ -22,7 +22,7 @@ export const config = {
 
 export default async function handler(
     req: NextApiRequest,
-    res: NextApiResponse<any>
+    res: NextApiResponse
 ) {
     if (req.method === 'POST') {
         try {
@@ -32,37 +32,34 @@ export default async function handler(
                 res.status(400).json({ message: 'User not found' })
             }
 
-            let { name, description, price, image } = JSON.parse(req.body)
+            const { name, description, price, image } = JSON.parse(req.body)
 
-            price = Number(price)
+            let imageId = uuidv4()
+            await prisma.product.create({
+                data: {
+                    name: name,
+                    description: description,
+                    price: Number(price),
+                    creatorId: userId!,
+                    s3ImageId: imageId,
+                },
+            })
 
-            if (image) {
-                let imageId = uuidv4()
-                await prisma.product.create({
-                    data: {
-                        name: name,
-                        description: description,
-                        price: price,
-                        creatorId: userId!,
-                        s3ImageId: imageId,
-                    },
-                })
+            const base64 = image.split(';base64,').pop()
+            const buf = Buffer.from(base64, 'base64')
 
-                const base64 = image.split(';base64,').pop()
-                const buf = Buffer.from(base64, 'base64')
+            let upload = await s3.Upload(
+                {
+                    buffer: buf,
+                    name: `${imageId}.jpeg`,
+                },
+                `${userId}/`
+            )
 
-                let upload = await s3.Upload(
-                    {
-                        buffer: buf,
-                        name: `${imageId}.jpeg`,
-                    },
-                    `${userId}/`
-                )
-            }
             res.status(200).json({ message: 'Product successfully created' })
         } catch (e) {
             console.log(e)
-            res.status(400).json({ message: 'User not found' })
+            res.status(400).json({ message: 'Create product failed' })
         }
     }
     if (req.method === 'GET') {
@@ -85,8 +82,8 @@ export default async function handler(
 
             res.status(200).json(s3ImgIdArr)
         } catch (e) {
-            res.status(400).json({ message: 'User not found' })
+            res.status(400).json({ message: 'Get products failed' })
         }
     }
-    res.status(400).send('')
+    res.status(400).json({ message: 'Bad Request' })
 }
