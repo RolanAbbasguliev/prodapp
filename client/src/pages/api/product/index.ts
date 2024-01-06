@@ -85,5 +85,30 @@ export default async function handler(
             res.status(400).json({ message: 'Get products failed' })
         }
     }
+    if (req.method === 'PUT') {
+        try {
+            const userId = await cookieGetUserId(req)
+            const { name, description, price, imageId } = req.body
+            console.log(req.body)
+
+            const update = await prisma.product.update({
+                where: {
+                    creatorId: userId,
+                    s3ImageId: imageId,
+                },
+                data: {
+                    name: name || undefined,
+                    description: description || undefined,
+                    price: Number(price) || undefined,
+                },
+            })
+            res.status(200).json({
+                message: 'Product info successfully updated',
+            })
+        } catch (e) {
+            console.log(e)
+            res.status(400).json({ message: 'UPDATE product failed' })
+        }
+    }
     res.status(400).json({ message: 'Bad Request' })
 }

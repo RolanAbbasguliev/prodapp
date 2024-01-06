@@ -9,7 +9,7 @@ export default async function handler(
     if (req.method === 'POST') {
         try {
             const userId = await cookieGetUserId(req)
-            const { imageId } = JSON.parse(req.body)
+            const { imageId } = req.body
 
             const product = await prisma.product.findUnique({
                 where: {

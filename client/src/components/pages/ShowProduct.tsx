@@ -16,23 +16,24 @@ import {
     IonImg,
     IonCardHeader,
     IonCardTitle,
+    IonInput,
 } from '@ionic/react'
-import { cameraOutline, scanOutline } from 'ionicons/icons'
+import { cameraOutline, refreshOutline, scanOutline } from 'ionicons/icons'
 import { BarcodeScanner } from '@capacitor-community/barcode-scanner'
 import { useEffect, useState } from 'react'
 import { Preferences } from '@capacitor/preferences'
 import { QRCodeSVG } from 'qrcode.react'
+import { useForm } from 'react-hook-form'
+import { ErrorMessage } from '@hookform/error-message'
 
-interface Product {
-    id: number
-    name: string
-    description: string
-    price: number
-    s3ImageId: string
-    createId: number
-}
+type Product = Record<string, string | number>
 
 const ShowProduct = () => {
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+    } = useForm()
     const [imageId, setImageId] = useState('')
     const [image, setImage] = useState('')
     const [product, setProduct] = useState<Product>()
@@ -52,6 +53,9 @@ const ShowProduct = () => {
 
         const productInfo = await fetch('/api/product/info', {
             method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
             body: JSON.stringify(data),
         })
 
@@ -60,6 +64,45 @@ const ShowProduct = () => {
         const blob = await res.blob()
         const url = URL.createObjectURL(blob)
         setImage(url)
+    }
+
+    const formFields = [
+        {
+            label: 'Name',
+            name: 'name',
+            placeholder: 'Coffe',
+            value: '',
+        },
+
+        {
+            label: 'Description',
+            name: 'description',
+            placeholder: 'Tasty coffe',
+            value: '',
+        },
+        {
+            label: 'Price',
+            name: 'price',
+            placeholder: '20$',
+            isNum: true,
+            value: '',
+        },
+    ]
+
+    const onSubmit = async (data: Record<string, string>) => {
+        try {
+            data.imageId = imageId
+            console.log(data)
+            const res = await fetch('/api/product', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            })
+        } catch (e) {
+            console.log(e)
+        }
     }
 
     useEffect(() => {
@@ -88,7 +131,7 @@ const ShowProduct = () => {
                                             height: '200px',
                                             backgroundImage: 'cover',
                                         }}
-                                        className="ion-margin-top"
+                                        className="ion-padding"
                                         src={image}
                                         alt="UPLOADED_PHOTO"
                                     ></IonImg>
@@ -97,6 +140,48 @@ const ShowProduct = () => {
                                 )}
                                 <IonCardHeader>
                                     <IonCardTitle>
+                                        <form onSubmit={handleSubmit(onSubmit)}>
+                                            {product &&
+                                                formFields.map(
+                                                    (field, index) => {
+                                                        return (
+                                                            <IonInput
+                                                                key={index}
+                                                                type={
+                                                                    field.isNum
+                                                                        ? 'number'
+                                                                        : 'text'
+                                                                }
+                                                                {...register(
+                                                                    field.name
+                                                                )}
+                                                                fill="outline"
+                                                                label={
+                                                                    field.label
+                                                                }
+                                                                className="ion-margin-top"
+                                                                placeholder={product[
+                                                                    `${field.name}`
+                                                                ].toString()}
+                                                            />
+                                                        )
+                                                    }
+                                                )}
+                                            <IonButton
+                                                type="submit"
+                                                size="default"
+                                                expand="block"
+                                                className="ion-margin-top"
+                                            >
+                                                Update
+                                                <IonIcon
+                                                    icon={refreshOutline}
+                                                    slot="end"
+                                                />
+                                            </IonButton>
+                                        </form>
+                                    </IonCardTitle>
+                                    {/* <IonCardTitle>
                                         Name: {product?.name}
                                     </IonCardTitle>
                                     <IonCardTitle>
@@ -104,7 +189,7 @@ const ShowProduct = () => {
                                     </IonCardTitle>
                                     <IonCardTitle>
                                         Price: {product?.price}
-                                    </IonCardTitle>
+                                    </IonCardTitle> */}
                                 </IonCardHeader>
                                 <IonCardContent className="ion-padding"></IonCardContent>
                             </IonCard>
