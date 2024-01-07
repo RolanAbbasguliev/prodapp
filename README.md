@@ -73,3 +73,5 @@ module.exports = nextConfig
 4. `docker compose up` - Инициализация базы данных
 5. `npm run start`
    Проект откроется на 3000 порту
+## WEB Implementation
+![webImpl](https://github.com/RolanAbbasguliev/prodapp/assets/18620705/18bacc3d-b443-4de0-a879-6f9e70532036)
