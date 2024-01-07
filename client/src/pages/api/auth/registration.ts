@@ -35,7 +35,7 @@ export default async function handler(
             res.status(200).json({ message: 'Registration Success' })
         } catch (e) {
             console.log(e)
-            return res.status(400).json({ message: `Error: ${e}` })
+            return res.status(400).json({ message: `Registration failed` })
         }
     } else {
         res.status(400).json({ message: 'Bad request' })

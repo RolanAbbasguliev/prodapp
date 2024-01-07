@@ -15,13 +15,18 @@ import {
     IonGrid,
     IonCol,
     IonRow,
+    IonToast,
+    IonFooter,
 } from '@ionic/react'
 import { useForm } from 'react-hook-form'
 import { ErrorMessage } from '@hookform/error-message'
 import { TextFieldTypes } from '../../interfaces/interfaces'
 import { happyOutline } from 'ionicons/icons'
+import { useState } from 'react'
+import useToast from '../../hooks/useToast'
 
 const Registration = () => {
+    const { toast, setToast } = useToast()
     const router = useIonRouter()
     const {
         register,
@@ -57,6 +62,12 @@ const Registration = () => {
                 },
                 body: JSON.stringify(data),
             })
+            const message = (await res.json()).message
+            setToast({
+                message: message,
+                isOpen: true,
+                color: res.status === 200 ? 'success' : 'danger',
+            })
 
             if (res.status === 200) router.push('/app')
         } catch (e) {
@@ -66,7 +77,7 @@ const Registration = () => {
 
     return (
         <IonPage>
-            <IonHeader>
+            <IonHeader id="headerRegistration">
                 <IonToolbar color="dark">
                     <IonButtons slot="start">
                         <IonBackButton defaultHref="/" />
@@ -143,6 +154,19 @@ const Registration = () => {
                         </IonCol>
                     </IonRow>
                 </IonGrid>
+                <IonToast
+                    color={toast.color}
+                    isOpen={toast.isOpen}
+                    message={toast.message}
+                    onDidDismiss={() => {
+                        setToast({
+                            isOpen: false,
+                        })
+                    }}
+                    duration={2000}
+                    positionAnchor="headerRegistration"
+                    position="top"
+                ></IonToast>
             </IonContent>
         </IonPage>
     )

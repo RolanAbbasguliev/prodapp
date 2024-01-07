@@ -1,9 +1,10 @@
-import dynamic from 'next/dynamic';
+import dynamic from 'next/dynamic'
+import { useEffect } from 'react'
 
 const App = dynamic(() => import('../components/AppShell'), {
-  ssr: false,
-});
+    ssr: false,
+})
 
 export default function Index() {
-  return <App />;
+    return <App />
 }

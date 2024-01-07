@@ -17,6 +17,7 @@ import {
     IonCardHeader,
     IonCardTitle,
     IonInput,
+    IonToast,
 } from '@ionic/react'
 import {
     cameraOutline,
@@ -30,10 +31,12 @@ import { Preferences } from '@capacitor/preferences'
 import { QRCodeSVG } from 'qrcode.react'
 import { useForm } from 'react-hook-form'
 import { ErrorMessage } from '@hookform/error-message'
+import useToast from '../../hooks/useToast'
 
 type Product = Record<string, string | number>
 
 const ShowProduct = () => {
+    const { toast, setToast } = useToast()
     const {
         register,
         handleSubmit,
@@ -95,7 +98,7 @@ const ShowProduct = () => {
         },
     ]
 
-    const onSubmit = async (data: Record<string, string>) => {
+    const onUpdate = async (data: Record<string, string>) => {
         try {
             data.imageId = imageId
 
@@ -105,6 +108,13 @@ const ShowProduct = () => {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(data),
+            })
+
+            const message = (await res.json()).message
+            setToast({
+                message: message,
+                isOpen: true,
+                color: res.status === 200 ? 'success' : 'danger',
             })
         } catch (e) {
             console.log(e)
@@ -124,8 +134,17 @@ const ShowProduct = () => {
                 body: JSON.stringify(data),
             })
 
+            const message = (await res.json()).message
+            setToast({
+                message: message,
+                isOpen: true,
+                color: res.status === 200 ? 'success' : 'danger',
+            })
+
             if (res.status === 200) {
-                router.push('/app/addProduct')
+                setTimeout(() => {
+                    router.push('/app/list-qrs')
+                }, 500)
             }
         } catch (e) {
             console.log(e)
@@ -139,7 +158,7 @@ const ShowProduct = () => {
     }, [])
     return (
         <>
-            <IonHeader>
+            <IonHeader id="headerShowProduct">
                 <IonToolbar color="dark">
                     <IonTitle className="ion-text-center">
                         SHOW PRODUCT
@@ -167,7 +186,7 @@ const ShowProduct = () => {
                                 )}
                                 <IonCardHeader>
                                     <IonCardTitle>
-                                        <form onSubmit={handleSubmit(onSubmit)}>
+                                        <form onSubmit={handleSubmit(onUpdate)}>
                                             {product &&
                                                 formFields.map(
                                                     (field, index) => {
@@ -227,6 +246,19 @@ const ShowProduct = () => {
                         </IonCol>
                     </IonRow>
                 </IonGrid>
+                <IonToast
+                    color={toast.color}
+                    isOpen={toast.isOpen}
+                    message={toast.message}
+                    onDidDismiss={() => {
+                        setToast({
+                            isOpen: false,
+                        })
+                    }}
+                    duration={2000}
+                    positionAnchor="headerShowProduct"
+                    position="top"
+                ></IonToast>
             </IonContent>
         </>
     )

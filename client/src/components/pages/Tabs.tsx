@@ -18,7 +18,7 @@ import ShowProduct from './ShowProduct'
 const Tabs = () => {
     return (
         <IonTabs>
-            <IonTabBar slot="bottom">
+            <IonTabBar slot="bottom" id="tab">
                 <IonTabButton tab="addProduct" href="/app/addProduct">
                     <IonIcon icon={addCircle} />
                     <IonLabel>Add</IonLabel>

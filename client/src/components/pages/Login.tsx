@@ -19,17 +19,18 @@ import {
     IonRow,
     IonCol,
     IonToast,
+    IonFooter,
 } from '@ionic/react'
 import { useForm } from 'react-hook-form'
 import { ErrorMessage } from '@hookform/error-message'
 import { TextFieldTypes } from '../../interfaces/interfaces'
 import { logInOutline, personCircleOutline } from 'ionicons/icons'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import useToast from '../../hooks/useToast'
 
 const Login = () => {
-    const [isOpen, setIsOpen] = useState(false)
-    const [message, setMessage] = useState('')
-    const [reqSuccess, setReqSuccess] = useState(false)
+    const { toast, setToast } = useToast()
+
     const router = useIonRouter()
     const {
         register,
@@ -53,7 +54,6 @@ const Login = () => {
 
     const onSubmit = async (data: any) => {
         try {
-            setIsOpen(true)
             const res = await fetch('/api/auth/login', {
                 method: 'POST',
                 headers: {
@@ -63,12 +63,14 @@ const Login = () => {
             })
 
             const message = (await res.json()).message
-            setMessage(message)
 
-            if (res.status === 200) {
-                setReqSuccess(true)
-                router.push('/app')
-            }
+            setToast({
+                message: message,
+                isOpen: true,
+                color: res.status === 200 ? 'success' : 'danger',
+            })
+
+            if (res.status === 200) router.push('/app')
         } catch (e) {
             console.log(e)
         }
@@ -76,10 +78,10 @@ const Login = () => {
 
     return (
         <IonPage>
-            <IonHeader>
+            <IonHeader id="headerLogin">
                 <IonToolbar color="dark">
                     <IonTitle className="ion-text-center">
-                        Native App v1
+                        Scan Product App v1
                     </IonTitle>
                 </IonToolbar>
             </IonHeader>
@@ -159,14 +161,20 @@ const Login = () => {
                         </IonCol>
                     </IonRow>
                 </IonGrid>
+                <IonToast
+                    color={toast.color}
+                    isOpen={toast.isOpen}
+                    message={toast.message}
+                    position="top"
+                    duration={2000}
+                    positionAnchor="headerLogin"
+                    onDidDismiss={() => {
+                        setToast({
+                            isOpen: false,
+                        })
+                    }}
+                ></IonToast>
             </IonContent>
-            <IonToast
-                color={reqSuccess ? 'success' : 'danger'}
-                isOpen={isOpen}
-                message={message}
-                onDidDismiss={() => setIsOpen(false)}
-                duration={2000}
-            ></IonToast>
         </IonPage>
     )
 }

@@ -25,8 +25,11 @@ import { Camera, CameraResultType } from '@capacitor/camera'
 import { ErrorMessage } from '@hookform/error-message'
 import { useForm } from 'react-hook-form'
 import { documentOutline, downloadOutline, imagesOutline } from 'ionicons/icons'
+import useToast from '../../hooks/useToast'
 
 const AddProduct = () => {
+    const { toast, setToast } = useToast()
+    const [error, setError] = useState('')
     const {
         register,
         handleSubmit,
@@ -39,6 +42,7 @@ const AddProduct = () => {
 
     const uploadPhoto = async () => {
         try {
+            setError('')
             const image = await Camera.getPhoto({
                 quality: 90,
                 allowEditing: true,
@@ -55,8 +59,22 @@ const AddProduct = () => {
     const onSubmit = async (data: Record<string, string>) => {
         try {
             if (!photo) {
+                setError('*Upload photo is required')
                 return
             }
+            setError('')
+
+            const buffer = Buffer.from(photo.substring(photo.indexOf(',') + 1))
+            if (buffer.length / 1e6 > 4) {
+                setPhoto('')
+                setToast({
+                    isOpen: true,
+                    message: 'Photo size exceeded',
+                    color: 'danger',
+                })
+                return
+            }
+
             data.image = photo
 
             const res = await fetch('/api/product', {
@@ -66,6 +84,17 @@ const AddProduct = () => {
                 },
                 body: JSON.stringify(data),
             })
+            const message = (await res.json()).message
+            setToast({
+                message: message,
+                isOpen: true,
+                color: res.status === 200 ? 'success' : 'danger',
+            })
+            if (res.status === 200) {
+                setTimeout(() => {
+                    router.push('/app/list-qrs')
+                }, 500)
+            }
         } catch (e) {
             console.log(e)
         }
@@ -81,7 +110,7 @@ const AddProduct = () => {
         {
             label: 'Description',
             name: 'description',
-            placeholder: 'Tasty coffe',
+            placeholder: 'Cappuccino',
         },
         {
             label: 'Price',
@@ -93,7 +122,7 @@ const AddProduct = () => {
 
     return (
         <>
-            <IonHeader>
+            <IonHeader id="headerAddProduct">
                 <IonToolbar color="dark">
                     <IonTitle className="ion-text-center">
                         Create Poroduct
@@ -119,6 +148,8 @@ const AddProduct = () => {
                                                             <p
                                                                 style={{
                                                                     color: 'red',
+                                                                    marginTop:
+                                                                        '5px',
                                                                 }}
                                                             >
                                                                 {message}
@@ -150,6 +181,7 @@ const AddProduct = () => {
 
                                         {photo ? (
                                             <IonImg
+                                                className="ion-margin-top"
                                                 style={{
                                                     height: '200px',
                                                     backgroundImage: 'cover',
@@ -158,19 +190,31 @@ const AddProduct = () => {
                                                 alt="UPLOADED_PHOTO"
                                             ></IonImg>
                                         ) : (
-                                            <IonButton
-                                                color="medium"
-                                                size="default"
-                                                expand="block"
-                                                onClick={uploadPhoto}
-                                                className="ion-margin-top"
-                                            >
-                                                Limit 4mb
-                                                <IonIcon
-                                                    icon={imagesOutline}
-                                                    slot="end"
-                                                />
-                                            </IonButton>
+                                            <>
+                                                <IonButton
+                                                    color="medium"
+                                                    size="default"
+                                                    expand="block"
+                                                    onClick={uploadPhoto}
+                                                    className="ion-margin-top"
+                                                >
+                                                    Limit 4Mb
+                                                    <IonIcon
+                                                        icon={imagesOutline}
+                                                        slot="end"
+                                                    />
+                                                </IonButton>
+                                                {error && (
+                                                    <p
+                                                        style={{
+                                                            color: 'red',
+                                                            marginTop: '5px',
+                                                        }}
+                                                    >
+                                                        {error}
+                                                    </p>
+                                                )}
+                                            </>
                                         )}
                                         <IonButton
                                             expand="block"
@@ -190,6 +234,19 @@ const AddProduct = () => {
                         </IonCol>
                     </IonRow>
                 </IonGrid>
+                <IonToast
+                    color={toast.color}
+                    isOpen={toast.isOpen}
+                    message={toast.message}
+                    position="top"
+                    duration={2000}
+                    positionAnchor="headerAddProduct"
+                    onDidDismiss={() => {
+                        setToast({
+                            isOpen: false,
+                        })
+                    }}
+                ></IonToast>
             </IonContent>
         </>
     )

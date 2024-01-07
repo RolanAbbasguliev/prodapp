@@ -51,7 +51,7 @@ const ListQrs = () => {
                     <IonTitle className="ion-text-center">QRCode List</IonTitle>
                 </IonToolbar>
             </IonHeader>
-            <IonContent className="ion-padding">
+            <IonContent>
                 <IonGrid fixed>
                     <IonRow className="ion-justify-content-center ">
                         <IonCol size="12" sizeMd="8" sizeLg="6" sizeXl="4">
@@ -63,14 +63,14 @@ const ListQrs = () => {
                                                 router.push(`/app/show/${id}`)
                                             }
                                             key={id}
-                                            className="ion-text-center ion-margins"
+                                            className="ion-text-center ion-padding "
                                         >
                                             <IonCardContent className="ion-text-center">
                                                 <QRCodeSVG
                                                     value={id}
                                                 ></QRCodeSVG>
                                                 <h1 className="ion-padding">
-                                                    SCAN ME
+                                                    SCAN ME OR TAP
                                                 </h1>
                                             </IonCardContent>
                                         </IonCard>
