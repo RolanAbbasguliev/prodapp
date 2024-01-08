@@ -100,6 +100,14 @@ const ShowProduct = () => {
 
     const onUpdate = async (data: Record<string, string>) => {
         try {
+            if (!(data.name && data.description && data.price)) {
+                setToast({
+                    message: 'Set new field',
+                    isOpen: true,
+                    color: 'danger',
+                })
+                return
+            }
             data.imageId = imageId
 
             const res = await fetch('/api/product', {
@@ -184,64 +192,58 @@ const ShowProduct = () => {
                                 ) : (
                                     <h1>Loading</h1>
                                 )}
-                                <IonCardHeader>
-                                    <IonCardTitle>
-                                        <form onSubmit={handleSubmit(onUpdate)}>
-                                            {product &&
-                                                formFields.map(
-                                                    (field, index) => {
-                                                        return (
-                                                            <IonInput
-                                                                key={index}
-                                                                type={
-                                                                    field.isNum
-                                                                        ? 'number'
-                                                                        : 'text'
-                                                                }
-                                                                {...register(
-                                                                    field.name
-                                                                )}
-                                                                fill="outline"
-                                                                label={
-                                                                    field.label
-                                                                }
-                                                                className="ion-margin-top"
-                                                                placeholder={product[
-                                                                    `${field.name}`
-                                                                ].toString()}
-                                                            />
-                                                        )
-                                                    }
-                                                )}
-                                            <IonButton
-                                                type="submit"
-                                                size="default"
-                                                expand="block"
-                                                className="ion-margin-top"
-                                            >
-                                                Update
-                                                <IonIcon
-                                                    icon={refreshOutline}
-                                                    slot="end"
-                                                />
-                                            </IonButton>
-                                            <IonButton
-                                                onClick={onDelete}
-                                                color="danger"
-                                                size="default"
-                                                expand="block"
-                                                className="ion-margin-top"
-                                            >
-                                                Delete
-                                                <IonIcon
-                                                    icon={trashOutline}
-                                                    slot="end"
-                                                />
-                                            </IonButton>
-                                        </form>
-                                    </IonCardTitle>
-                                </IonCardHeader>
-                                <IonCardContent className="ion-padding"></IonCardContent>
+                                <IonCardContent>
+                                    <form onSubmit={handleSubmit(onUpdate)}>
+                                        {product &&
+                                            formFields.map((field, index) => {
+                                                return (
+                                                    <IonInput
+                                                        mode="md"
+                                                        key={index}
+                                                        type={
+                                                            field.isNum
+                                                                ? 'number'
+                                                                : 'text'
+                                                        }
+                                                        {...register(
+                                                            field.name
+                                                        )}
+                                                        fill="outline"
+                                                        label={field.label}
+                                                        className="ion-margin-top"
+                                                        placeholder={product[
+                                                            `${field.name}`
+                                                        ].toString()}
+                                                    />
+                                                )
+                                            })}
+                                        <IonButton
+                                            type="submit"
+                                            size="default"
+                                            expand="block"
+                                            className="ion-margin-top"
+                                        >
+                                            Update
+                                            <IonIcon
+                                                icon={refreshOutline}
+                                                slot="end"
+                                            />
+                                        </IonButton>
+                                        <IonButton
+                                            onClick={onDelete}
+                                            color="danger"
+                                            size="default"
+                                            expand="block"
+                                            className="ion-margin-top"
+                                        >
+                                            Delete
+                                            <IonIcon
+                                                icon={trashOutline}
+                                                slot="end"
+                                            />
+                                        </IonButton>
+                                    </form>
+                                </IonCardContent>
                             </IonCard>
                         </IonCol>
                     </IonRow>

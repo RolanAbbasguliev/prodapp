@@ -1,8 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-    distDir: 'build',
+    distDir: process.env.PRODUCTAPP_OUTPUT ? 'build_phone' : 'build',
     reactStrictMode: false,
     swcMinify: true,
+    output: process.env.PRODUCTAPP_OUTPUT,
 
     images: {
         unoptimized: true,

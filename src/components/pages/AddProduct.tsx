@@ -157,6 +157,7 @@ const AddProduct = () => {
                                                         )}
                                                     />
                                                     <IonInput
+                                                        mode="md"
                                                         type={
                                                             field.isNum
                                                                 ? 'number'

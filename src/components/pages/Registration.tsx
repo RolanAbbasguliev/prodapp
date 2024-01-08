@@ -1,5 +1,3 @@
-import Image from 'next/image'
-
 import {
     IonPage,
     IonHeader,
@@ -9,28 +7,26 @@ import {
     IonButton,
     IonIcon,
     IonContent,
-    IonMenuButton,
-    IonList,
     IonInput,
     IonCard,
     IonCardContent,
+    IonBackButton,
     useIonRouter,
     IonGrid,
-    IonRow,
     IonCol,
+    IonRow,
     IonToast,
     IonFooter,
 } from '@ionic/react'
 import { useForm } from 'react-hook-form'
 import { ErrorMessage } from '@hookform/error-message'
 import { TextFieldTypes } from '../../interfaces/interfaces'
-import { logInOutline, personCircleOutline } from 'ionicons/icons'
-import { useEffect, useState } from 'react'
+import { happyOutline } from 'ionicons/icons'
+import { useState } from 'react'
 import useToast from '../../hooks/useToast'
 
-const Login = () => {
+const Registration = () => {
     const { toast, setToast } = useToast()
-
     const router = useIonRouter()
     const {
         register,
@@ -39,6 +35,11 @@ const Login = () => {
     } = useForm()
 
     const formFields = [
+        {
+            name: 'name',
+            placeholder: 'Rolan',
+            label: 'Name',
+        },
         {
             name: 'email',
             placeholder: 'test@gmail.com',
@@ -54,16 +55,14 @@ const Login = () => {
 
     const onSubmit = async (data: any) => {
         try {
-            const res = await fetch('/api/auth/login', {
+            const res = await fetch('/api/auth/registration', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(data),
             })
-
             const message = (await res.json()).message
-
             setToast({
                 message: message,
                 isOpen: true,
@@ -78,10 +77,13 @@ const Login = () => {
 
     return (
         <IonPage>
-            <IonHeader id="headerLogin">
+            <IonHeader id="headerRegistration">
                 <IonToolbar color="dark">
+                    <IonButtons slot="start">
+                        <IonBackButton defaultHref="/" />
+                    </IonButtons>
                     <IonTitle className="ion-text-center">
-                        Scan Product App v1
+                        Create Account
                     </IonTitle>
                 </IonToolbar>
             </IonHeader>
@@ -111,16 +113,17 @@ const Login = () => {
                                                         )}
                                                     />
                                                     <IonInput
+                                                        mode="md"
                                                         {...register(
                                                             field.name,
                                                             {
                                                                 required: `* ${field.name} is required`,
                                                             }
                                                         )}
+                                                        fill="outline"
                                                         type={
                                                             field.name as TextFieldTypes
                                                         }
-                                                        fill="outline"
                                                         placeholder={
                                                             field.placeholder
                                                         }
@@ -133,25 +136,16 @@ const Login = () => {
                                         })}
 
                                         <IonButton
-                                            expand="block"
-                                            type="submit"
-                                            className="ion-margin-top"
-                                        >
-                                            Login
-                                            <IonIcon
-                                                icon={logInOutline}
-                                                slot="end"
-                                            />
-                                        </IonButton>
-                                        <IonButton
                                             routerLink="/registration"
                                             expand="block"
-                                            type="button"
+                                            // size="large"
+
                                             className="ion-margin-top"
+                                            type="submit"
                                         >
                                             Create Account
                                             <IonIcon
-                                                icon={personCircleOutline}
+                                                icon={happyOutline}
                                                 slot="end"
                                             />
                                         </IonButton>
@@ -165,18 +159,18 @@ const Login = () => {
                     color={toast.color}
                     isOpen={toast.isOpen}
                     message={toast.message}
-                    position="top"
-                    duration={2000}
-                    positionAnchor="headerLogin"
                     onDidDismiss={() => {
                         setToast({
                             isOpen: false,
                         })
                     }}
+                    duration={2000}
+                    positionAnchor="headerRegistration"
+                    position="top"
                 ></IonToast>
             </IonContent>
         </IonPage>
     )
 }
 
-export default Login
+export default Registration
