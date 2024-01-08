@@ -8,7 +8,7 @@ const config: CapacitorConfig = {
     server: {
         url: 'http://192.168.0.100:3000', //replace your ip -> http://yourip:3000
         cleartext: true,
-    },  
+    },
 }
 
 export default config
