@@ -33,6 +33,7 @@ const Scanner = () => {
     }
 
     const startScan = async () => {
+        document.getElementById('tab')!.style.display! = 'none'
         setScanActive(true)
         // Check camera permission
         // This is just a simple example, check out the better checks below
@@ -49,6 +50,7 @@ const Scanner = () => {
     }
 
     const stopScan = () => {
+        document.getElementById('tab')!.style.display! = 'flex'
         showBackground()
         BarcodeScanner.showBackground()
         BarcodeScanner.stopScan()
@@ -75,7 +77,13 @@ const Scanner = () => {
                 </IonToolbar>
             </IonHeader>
 
-            <IonContent className="ion-padding" scrollY={false}>
+            <IonContent
+                className="ion-padding"
+                scrollY={false}
+                style={{
+                    display: scanActive ? 'none' : 'block',
+                }}
+            >
                 <IonGrid fixed>
                     <IonRow className="ion-justify-content-center">
                         <IonCol size="12" sizeMd="8" sizeLg="6" sizeXl="4">
@@ -86,11 +94,6 @@ const Scanner = () => {
                                         size="large"
                                         type="submit"
                                         className="ion-margin-top"
-                                        style={{
-                                            display: scanActive
-                                                ? 'none'
-                                                : 'block',
-                                        }}
                                         onClick={startScan}
                                     >
                                         Start Scan

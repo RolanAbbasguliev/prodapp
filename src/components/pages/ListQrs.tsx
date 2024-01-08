@@ -36,6 +36,7 @@ const ListQrs = () => {
     }
 
     useEffect(() => {
+        console.log('WTFFFFFF')
         fetchImg().then(() => console.log(s3imgArr))
     }, [])
     return (
