@@ -8,7 +8,6 @@
         "build:phone:android": "PRODUCTAPP_OUTPUT=export next build && sh ./android.permission.sh",
         "postbuild:phone:android": "npx cap sync",
         "build:phone:ios": "PRODUCTAPP_OUTPUT=export next build && sh ./ios.permission.sh",
-        "postbuild:phone:ios": "npx cap sync",
         "start": "next start",
         "lint": "next lint"
     },
