@@ -30,16 +30,10 @@ const ListQrs = () => {
             if (json.length > 0) {
                 setS3ImgArr(json)
             }
-
-            console.log('WTF')
         } catch (e) {
             console.log(e)
         }
     }
-
-    useEffect(() => {
-        console.log('render')
-    })
 
     useEffect(() => {
         fetchImg().then(() => console.log(s3imgArr))
