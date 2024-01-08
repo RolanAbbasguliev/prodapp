@@ -27,6 +27,8 @@ import { TextFieldTypes } from '../../interfaces/interfaces'
 import { logInOutline, personCircleOutline } from 'ionicons/icons'
 import { useEffect, useState } from 'react'
 import useToast from '../../hooks/useToast'
+import { GoogleAuth } from '@codetrix-studio/capacitor-google-auth'
+import { Plugins } from '@capacitor/core'
 
 const Login = () => {
     const { toast, setToast } = useToast()
@@ -54,25 +56,29 @@ const Login = () => {
 
     const onSubmit = async (data: any) => {
         try {
-            const res = await fetch('/api/auth/login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(data),
-            })
+            GoogleAuth.initialize()
 
-            const message = (await res.json()).message
+            const sigin = await GoogleAuth.signIn()
+            console.log(sigin)
+            // const res = await fetch('/api/auth/login', {
+            //     method: 'POST',
+            //     headers: {
+            //         'Content-Type': 'application/json',
+            //     },
+            //     body: JSON.stringify(data),
+            // })
 
-            setToast({
-                message: message,
-                isOpen: true,
-                color: res.status === 200 ? 'success' : 'danger',
-            })
+            // const message = (await res.json()).message
 
-            if (res.status === 200) router.push('/app')
+            // setToast({
+            //     message: message,
+            //     isOpen: true,
+            //     color: res.status === 200 ? 'success' : 'danger',
+            // })s
+
+            // if (res.status === 200) router.push('/app')
         } catch (e) {
-            console.log(e)
+            console.log(e, 'ERORR')
         }
     }
 
