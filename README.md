@@ -54,11 +54,11 @@
 3. `docker compose up` - Инициализация базы данных
 4. `npm i`
 
-#### 4. ❗️В файле .env нужно заменить HOST_IP на IP своего компьютера где будет крутиться сервер
+5. ❗️В файле .env нужно заменить HOST_IP на IP своего компьютера где будет крутиться сервер
 
-5. `npx cap add ios` // **ios** -> android
-6. `npx run build`
-7. `npm run build:phone:ios` // **ios** -> android
-8. `npm run start`
+6. `npx cap add ios` // **ios** -> android
+7. `npx run build`
+8. `npm run build:phone:ios` // **ios** -> android
+9. `npm run start`
    Сервер будет крутиться на 3000 порту
-9. `npx cap open ios` // **ios** -> android
+10. `npx cap open ios` // **ios** -> android
