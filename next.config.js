@@ -3,7 +3,7 @@ const nextConfig = {
     distDir: process.env.PRODUCTAPP_OUTPUT ? 'build_phone' : 'build',
     reactStrictMode: false,
     swcMinify: true,
-    output: process.env.PRODUCTAPP_OUTPUT,
+    output: process.env.PRODUCTAPP_OUTPUT ? 'export' : undefined,
 
     images: {
         unoptimized: true,

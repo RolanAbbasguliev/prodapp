@@ -54,7 +54,7 @@
 3. `docker compose up` - Инициализация базы данных
 4. `npm i`
 
-5. ❗️В файле .env нужно заменить HOST_IP на IP своего компьютера где будет крутиться сервер
+5. ❗️В файле capacitor.config.ts нужно заменить ip в url на свой локальный ip
 
 6. `npx cap add ios` // **ios** -> android
 7. `npx run build`
