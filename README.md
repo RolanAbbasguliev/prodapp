@@ -58,7 +58,7 @@
 
 6. `npx cap add ios` // **ios** -> android
 7. `npx run build`
-8. `npm run build:phone:ios` // **ios** -> android
+8. `npm run build:phone:ios`
 9. `npm run start`
    Сервер будет крутиться на 3000 порту
-10. `npx cap open ios` // **ios** -> android
+10. `npx cap open ios`
