@@ -31,14 +31,19 @@ import { useSession, signIn } from 'next-auth/react'
 import { Browser } from '@capacitor/browser'
 import { Preferences } from '@capacitor/preferences'
 import { Capacitor } from '@capacitor/core'
+import { App } from '@capacitor/app'
 
 const Close = () => {
-    useEffect(() => {
-        window.close()
-        Browser.close()
-    }, [])
-
-    return <IonPage>SDD</IonPage>
+    const Close = () => {
+        App.addListener('appUrlOpen', (data) => {
+            console.log(data)
+        })
+    }
+    return (
+        <IonPage>
+            <IonButton onClick={Close}>close</IonButton>
+        </IonPage>
+    )
 }
 
 export default Close

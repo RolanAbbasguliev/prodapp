@@ -83,7 +83,7 @@ export const authConfig: NextAuthOptions = {
 
         async redirect({ url, baseUrl }) {
             console.log(url, baseUrl)
-            return baseUrl
+            return 'http://localhost:3000/close'
         },
     },
 }
