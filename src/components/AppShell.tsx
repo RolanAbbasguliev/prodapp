@@ -26,7 +26,6 @@ const AppShell = () => {
                     <Route path="/app/show" component={ShowProduct} />
                 </IonRouterOutlet>
             </IonReactRouter>
-     
         </IonApp>
     )
 }
