@@ -31,6 +31,7 @@ import { useSession, signIn } from 'next-auth/react'
 import { Browser } from '@capacitor/browser'
 import { Preferences } from '@capacitor/preferences'
 import { Capacitor } from '@capacitor/core'
+import { InAppBrowser } from '@awesome-cordova-plugins/in-app-browser'
 
 const Login = () => {
     const { toast, setToast } = useToast()
@@ -90,29 +91,35 @@ const Login = () => {
     const authGoogle = async () => {
         try {
             // const res = await signIn('google', {})
+            const url =
+                'https://accounts.google.com/o/oauth2/v2/auth/oauthchooseaccount?client_id=1063431845940-0glud65an0ms5kg72srf2696dteaa022.apps.googleusercontent.com&scope=openid%20email%20profile&response_type=code&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fapi%2Fauth%2Fcallback%2Fgoogle&prompt=consent&access_type=offline&service=lso&o2v=2&theme=glif&flowName=GeneralOAuthFlow'
+            const ref = InAppBrowser.create(url, '_blank')
 
-            Browser.addListener('browserFinished', () => {
-                console.log('finished')
-            })
+            if (ref) {
+                ref!.on('loadstart').subscribe((e: any) => {
+                    const includesUrl = e.url.includes(`/callback/google`)
+                    if (includesUrl) {
+                        ref.close()
+                    }
+                })
+            }
 
-            await Browser.open({
-                url: 'https://accounts.google.com/o/oauth2/v2/auth/oauthchooseaccount?client_id=1063431845940-0glud65an0ms5kg72srf2696dteaa022.apps.googleusercontent.com&scope=openid%20email%20profile&response_type=code&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fapi%2Fauth%2Fcallback%2Fgoogle&prompt=consent&access_type=offline&service=lso&o2v=2&theme=glif&flowName=GeneralOAuthFlow',
-            })
-            await Preferences.set({
-                key: 'googleAuth',
-                value: 'true',
-            })
+            // Browser.addListener('browserFinished', () => {
+            //     console.log('finished')
+            // })
+
+            // await Browser.open({
+            //     url: 'https://accounts.google.com/o/oauth2/v2/auth/oauthchooseaccount?client_id=1063431845940-0glud65an0ms5kg72srf2696dteaa022.apps.googleusercontent.com&scope=openid%20email%20profile&response_type=code&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fapi%2Fauth%2Fcallback%2Fgoogle&prompt=consent&access_type=offline&service=lso&o2v=2&theme=glif&flowName=GeneralOAuthFlow',
+            // })
+            // await Preferences.set({
+            //     key: 'googleAuth',
+            //     value: 'true',
+            // })
             // console.log(res, 'GOOGLE AUTH')
         } catch (e) {
             console.log(e)
         }
     }
-
-    useEffect(() => {
-        if (!Capacitor.isNativePlatform()) {
-            Browser.close()
-        }
-    }, [])
 
     return (
         <IonPage>
