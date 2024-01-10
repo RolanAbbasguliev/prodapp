@@ -19,6 +19,7 @@ import '@ionic/react/css/display.css'
 import '@/themes/variables.css'
 
 import { setupIonicReact } from '@ionic/react'
+import { SessionProvider } from 'next-auth/react'
 
 setupIonicReact()
 
@@ -42,7 +43,9 @@ function App({ Component, pageProps }: AppProps) {
                 <link rel="icon" href="/favicon.ico" />
             </Head>
             <NonSSRWrapper>
-                <Component {...pageProps} />
+                <SessionProvider>
+                    <Component {...pageProps} />
+                </SessionProvider>
             </NonSSRWrapper>
         </>
     )

@@ -16,6 +16,7 @@ const AppShell = () => {
         <IonApp>
             <IonReactRouter>
                 <IonRouterOutlet>
+                    {/* <Redirect from="/" to="/api/auth/signin" exact /> */}
                     <Route path="/" component={Login} exact />
                     <Route
                         path="/registration"

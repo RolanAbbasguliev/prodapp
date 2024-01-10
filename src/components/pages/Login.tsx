@@ -24,12 +24,14 @@ import {
 import { useForm } from 'react-hook-form'
 import { ErrorMessage } from '@hookform/error-message'
 import { TextFieldTypes } from '../../interfaces/interfaces'
-import { logInOutline, personCircleOutline } from 'ionicons/icons'
+import { logInOutline, logoGoogle, personCircleOutline } from 'ionicons/icons'
 import { useEffect, useState } from 'react'
 import useToast from '../../hooks/useToast'
+import { useSession, signIn } from 'next-auth/react'
 
 const Login = () => {
     const { toast, setToast } = useToast()
+    const { data } = useSession()
 
     const router = useIonRouter()
     const {
@@ -54,23 +56,41 @@ const Login = () => {
 
     const onSubmit = async (data: any) => {
         try {
-            const res = await fetch('/api/auth/login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(data),
+            const res = await signIn('credentials', {
+                email: data.email,
+                password: data.password,
+                redirect: false,
             })
 
-            const message = (await res.json()).message
+            // const res = await fetch('/api/auth/login', {
+            //     method: 'POST',
+            //     headers: {
+            //         'Content-Type': 'application/json',
+            //     },
+            //     body: JSON.stringify(data),
+            // })
+
+            // const message = (await res.json()).message
 
             setToast({
-                message: message,
+                message: res?.status === 200 ? 'Login success' : 'Login failed',
                 isOpen: true,
-                color: res.status === 200 ? 'success' : 'danger',
+                color: res?.status === 200 ? 'success' : 'danger',
             })
 
-            if (res.status === 200) router.push('/app')
+            if (res?.status === 200) router.push('/app')
+        } catch (e) {
+            console.log(e)
+        }
+    }
+
+    const authGoogle = async () => {
+        try {
+            const res = await signIn('google', {
+                redirect: false,
+            })
+
+            console.log(res, 'GOOGLE AUTH')
         } catch (e) {
             console.log(e)
         }
@@ -144,19 +164,31 @@ const Login = () => {
                                                 slot="end"
                                             />
                                         </IonButton>
-                                        <IonButton
-                                            routerLink="/registration"
-                                            expand="block"
-                                            type="button"
-                                            className="ion-margin-top"
-                                        >
-                                            Create Account
-                                            <IonIcon
-                                                icon={personCircleOutline}
-                                                slot="end"
-                                            />
-                                        </IonButton>
                                     </form>
+                                    <IonButton
+                                        expand="block"
+                                        type="button"
+                                        className="ion-margin-top"
+                                        onClick={authGoogle}
+                                    >
+                                        Google Auth
+                                        <IonIcon
+                                            slot="end"
+                                            icon={logoGoogle}
+                                        ></IonIcon>
+                                    </IonButton>
+                                    <IonButton
+                                        routerLink="/registration"
+                                        expand="block"
+                                        type="button"
+                                        className="ion-margin-top"
+                                    >
+                                        Create Account
+                                        <IonIcon
+                                            icon={personCircleOutline}
+                                            slot="end"
+                                        />
+                                    </IonButton>
                                 </IonCardContent>
                             </IonCard>
                         </IonCol>

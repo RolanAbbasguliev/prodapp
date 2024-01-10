@@ -1,13 +1,85 @@
+import { NextAuthOptions, User } from 'next-auth'
+import GoogleProvider from 'next-auth/providers/google'
+import CredentialsProvider from 'next-auth/providers/credentials'
+import bcrypt from 'bcrypt'
 import NextAuth from 'next-auth/next'
-import GithubProvider from 'next-auth/providers/github'
+import { PrismaAdapter } from '@next-auth/prisma-adapter'
 
-export const authOptions = {
+import { PrismaClient } from '@prisma/client'
+import prisma from '../../../db/db'
+
+export const authConfig: NextAuthOptions = {
+    adapter: PrismaAdapter(prisma),
+    session: {
+        strategy: 'jwt',
+    },
+
     providers: [
-        GithubProvider({
-            clientId: process.env.GITHUB_ID ?? '',
-            clientSecret: process.env.GITHUB_SECRET ?? '',
+        CredentialsProvider({
+            name: 'credentials',
+            credentials: {
+                email: {
+                    label: 'Email',
+                    type: 'email',
+                    placeholder: 'example@gmail.com',
+                },
+                password: {
+                    label: 'Password',
+                    type: 'password',
+                },
+            },
+            async authorize(credentials) {
+                console.log(credentials, 'CREDS')
+                if (!credentials || !credentials.email || !credentials.password)
+                    return null
+
+                const user = await prisma?.user.findFirst({
+                    where: { email: credentials.email },
+                })
+
+                if (!user) {
+                    console.log('NO USER FOUND')
+                    return null
+                }
+
+                const validPassword = await bcrypt.compare(
+                    credentials.password,
+                    user?.passwordHash!
+                )
+
+                if (user && validPassword) {
+                    const { passwordHash, ...userWithoutPassword } = user
+
+                    return userWithoutPassword as User
+                }
+
+                return null
+            },
+        }),
+        GoogleProvider({
+            clientId: process.env.GOOGLE_CLIENT_ID!,
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+            checks: ['none'],
+            authorization: {
+                params: {
+                    prompt: 'consent',
+                    access_type: 'offline',
+                    response_type: 'code',
+                },
+            },
         }),
     ],
+    callbacks: {
+        async signIn({ user, account, profile, email, credentials }) {
+            try {
+                console.log(profile)
+
+                return true
+            } catch (e) {
+                return false
+            }
+        },
+    },
 }
 
-export default NextAuth(authOptions)
+export default NextAuth(authConfig)
