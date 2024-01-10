@@ -7,6 +7,7 @@ import { PrismaAdapter } from '@next-auth/prisma-adapter'
 
 import { PrismaClient } from '@prisma/client'
 import prisma from '../../../db/db'
+import { Browser } from '@capacitor/browser'
 
 export const authConfig: NextAuthOptions = {
     adapter: PrismaAdapter(prisma),
@@ -78,6 +79,11 @@ export const authConfig: NextAuthOptions = {
             } catch (e) {
                 return false
             }
+        },
+
+        async redirect({ url, baseUrl }) {
+            console.log(url, baseUrl)
+            return baseUrl
         },
     },
 }

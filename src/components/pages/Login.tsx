@@ -30,6 +30,7 @@ import useToast from '../../hooks/useToast'
 import { useSession, signIn } from 'next-auth/react'
 import { Browser } from '@capacitor/browser'
 import { Preferences } from '@capacitor/preferences'
+import { Capacitor } from '@capacitor/core'
 
 const Login = () => {
     const { toast, setToast } = useToast()
@@ -108,16 +109,9 @@ const Login = () => {
     }
 
     useEffect(() => {
-        console.log(
-            Preferences.get({ key: 'googleAuth' }).then(({ value }) =>
-                console.log(data)
-            )
-        )
-        Preferences.get({ key: 'googleAuth' }).then(({ value }) => {
-            if (value) {
-                Browser.close()
-            }
-        })
+        if (!Capacitor.isNativePlatform()) {
+            Browser.close()
+        }
     }, [])
 
     return (

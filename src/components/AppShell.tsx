@@ -8,6 +8,7 @@ import Login from './pages/Login'
 import Registration from './pages/Registration'
 import ShowProduct from './pages/ShowProduct'
 import { useEffect } from 'react'
+import Close from './pages/Close'
 
 defineCustomElements(window)
 
@@ -23,6 +24,7 @@ const AppShell = () => {
                         component={Registration}
                         exact
                     />
+                    <Route path="/close" component={Close} />
                     <Route path="/app" component={Tabs} />
                     <Route path="/app/show" component={ShowProduct} />
                 </IonRouterOutlet>
