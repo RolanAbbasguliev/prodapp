@@ -15,47 +15,47 @@ export const authConfig: NextAuthOptions = {
     },
 
     providers: [
-        CredentialsProvider({
-            name: 'credentials',
-            credentials: {
-                email: {
-                    label: 'Email',
-                    type: 'email',
-                    placeholder: 'example@gmail.com',
-                },
-                password: {
-                    label: 'Password',
-                    type: 'password',
-                },
-            },
-            async authorize(credentials) {
-                console.log(credentials, 'CREDS')
-                if (!credentials || !credentials.email || !credentials.password)
-                    return null
+        // CredentialsProvider({
+        //     name: 'credentials',
+        //     credentials: {
+        //         email: {
+        //             label: 'Email',
+        //             type: 'email',
+        //             placeholder: 'example@gmail.com',
+        //         },
+        //         password: {
+        //             label: 'Password',
+        //             type: 'password',
+        //         },
+        //     },
+        //     async authorize(credentials) {
+        //         console.log(credentials, 'CREDS')
+        //         if (!credentials || !credentials.email || !credentials.password)
+        //             return null
 
-                const user = await prisma?.user.findFirst({
-                    where: { email: credentials.email },
-                })
+        //         const user = await prisma?.user.findFirst({
+        //             where: { email: credentials.email },
+        //         })
 
-                if (!user) {
-                    console.log('NO USER FOUND')
-                    return null
-                }
+        //         if (!user) {
+        //             console.log('NO USER FOUND')
+        //             return null
+        //         }
 
-                const validPassword = await bcrypt.compare(
-                    credentials.password,
-                    user?.passwordHash!
-                )
+        //         const validPassword = await bcrypt.compare(
+        //             credentials.password,
+        //             user?.passwordHash!
+        //         )
 
-                if (user && validPassword) {
-                    const { passwordHash, ...userWithoutPassword } = user
+        //         if (user && validPassword) {
+        //             const { passwordHash, ...userWithoutPassword } = user
 
-                    return userWithoutPassword as User
-                }
+        //             return userWithoutPassword as unknown as User
+        //         }
 
-                return null
-            },
-        }),
+        //         return null
+        //     },
+        // }),
         GoogleProvider({
             clientId: process.env.GOOGLE_CLIENT_ID!,
             clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
@@ -72,7 +72,7 @@ export const authConfig: NextAuthOptions = {
     callbacks: {
         async signIn({ user, account, profile, email, credentials }) {
             try {
-                console.log(profile)
+                console.log(profile, 'GOOOOO')
 
                 return true
             } catch (e) {

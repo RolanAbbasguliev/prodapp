@@ -28,6 +28,7 @@ import { logInOutline, logoGoogle, personCircleOutline } from 'ionicons/icons'
 import { useEffect, useState } from 'react'
 import useToast from '../../hooks/useToast'
 import { useSession, signIn } from 'next-auth/react'
+import { Browser } from '@capacitor/browser'
 
 const Login = () => {
     const { toast, setToast } = useToast()
@@ -86,11 +87,16 @@ const Login = () => {
 
     const authGoogle = async () => {
         try {
-            const res = await signIn('google', {
-                redirect: false,
+            // const res = await signIn('google', {})
+
+            Browser.addListener('browserFinished', () => {
+                console.log('finished')
             })
 
-            console.log(res, 'GOOGLE AUTH')
+            await Browser.open({
+                url: 'https://accounts.google.com/o/oauth2/v2/auth/oauthchooseaccount?client_id=1063431845940-0glud65an0ms5kg72srf2696dteaa022.apps.googleusercontent.com&scope=openid%20email%20profile&response_type=code&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fapi%2Fauth%2Fcallback%2Fgoogle&prompt=consent&access_type=offline&service=lso&o2v=2&theme=glif&flowName=GeneralOAuthFlow',
+            })
+            // console.log(res, 'GOOGLE AUTH')
         } catch (e) {
             console.log(e)
         }
