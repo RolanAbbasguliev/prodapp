@@ -31,7 +31,6 @@ import { useSession, signIn } from 'next-auth/react'
 import { Browser } from '@capacitor/browser'
 import { Preferences } from '@capacitor/preferences'
 import { Capacitor } from '@capacitor/core'
-import { InAppBrowser } from '@awesome-cordova-plugins/in-app-browser'
 
 const Login = () => {
     const { toast, setToast } = useToast()
@@ -91,18 +90,25 @@ const Login = () => {
     const authGoogle = async () => {
         try {
             // const res = await signIn('google', {})
+            const { InAppBrowser } = await import(
+                '@awesome-cordova-plugins/in-app-browser'
+            )
             const url =
                 'https://accounts.google.com/o/oauth2/v2/auth/oauthchooseaccount?client_id=1063431845940-0glud65an0ms5kg72srf2696dteaa022.apps.googleusercontent.com&scope=openid%20email%20profile&response_type=code&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fapi%2Fauth%2Fcallback%2Fgoogle&prompt=consent&access_type=offline&service=lso&o2v=2&theme=glif&flowName=GeneralOAuthFlow'
-            const ref = InAppBrowser.create(url, '_blank')
+            const ref = InAppBrowser.create(
+                url,
+                '_blank',
+                'location=yes,hidenavigationbuttons=yes,hideurlbar=yes,toolbarcolor=#f1f5f9'
+            )
 
-            if (ref) {
-                ref!.on('loadstart').subscribe((e: any) => {
-                    const includesUrl = e.url.includes(`/callback/google`)
-                    if (includesUrl) {
-                        ref.close()
-                    }
-                })
-            }
+            // if (ref) {
+            //     ref!.on('loadstart').subscribe((e: any) => {
+            //         const includesUrl = e.url.includes(`/callback/google`)
+            //         if (includesUrl) {
+            //             ref.close()
+            //         }
+            //     })
+            // }
 
             // Browser.addListener('browserFinished', () => {
             //     console.log('finished')
@@ -196,7 +202,7 @@ const Login = () => {
                                         className="ion-margin-top"
                                         onClick={authGoogle}
                                     >
-                                        Google Auth
+                                        Google Auth F
                                         <IonIcon
                                             slot="end"
                                             icon={logoGoogle}
