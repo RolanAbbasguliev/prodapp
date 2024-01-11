@@ -118,7 +118,7 @@ const Login = () => {
     useEffect(() => {
         if (!(status === 'authenticated')) {
             const interval = setInterval(() => {
-                console.log(status)
+                // console.log(status)
                 update()
             }, 1000)
 

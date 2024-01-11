@@ -27,6 +27,7 @@ import { useForm } from 'react-hook-form'
 import { documentOutline, downloadOutline, imagesOutline } from 'ionicons/icons'
 import useToast from '../../hooks/useToast'
 import { signOut } from 'next-auth/react'
+import { redirect } from 'next/dist/server/api-utils'
 
 const AddProduct = () => {
     const { toast, setToast } = useToast()
@@ -122,7 +123,10 @@ const AddProduct = () => {
     ]
 
     const out = async () => {
-        await signOut({ callbackUrl: 'http://localhost:3000' })
+        await signOut({
+            redirect: false,
+        })
+        router.push('/')
     }
 
     return (
