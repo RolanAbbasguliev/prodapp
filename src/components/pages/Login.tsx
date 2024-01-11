@@ -31,7 +31,7 @@ import { useSession, signIn } from 'next-auth/react'
 import { Browser } from '@capacitor/browser'
 import { Preferences } from '@capacitor/preferences'
 import { Capacitor } from '@capacitor/core'
-import { App } from '@capacitor/app'
+import { GoogleAuth } from '@codetrix-studio/capacitor-google-auth'
 
 const Login = () => {
     const { toast, setToast } = useToast()
@@ -90,32 +90,17 @@ const Login = () => {
 
     const authGoogle = async () => {
         try {
-            // const res = await signIn('google', {})
+            // const url =
+            //     'https://accounts.google.com/o/oauth2/v2/auth/oauthchooseaccount?client_id=1063431845940-0glud65an0ms5kg72srf2696dteaa022.apps.googleusercontent.com&scope=openid%20email%20profile&response_type=code&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fapi%2Fauth%2Fcallback%2Fgoogle&prompt=consent&access_type=offline&service=lso&o2v=2&theme=glif&flowName=GeneralOAuthFlow'
 
-            // App.addListener('appUrlOpen', (data) => {
-            //     console.log('OPENED')
+            // await Browser.open({
+            //     url: url,
             // })
 
-            const url =
-                'https://accounts.google.com/o/oauth2/v2/auth/oauthchooseaccount?client_id=1063431845940-0glud65an0ms5kg72srf2696dteaa022.apps.googleusercontent.com&scope=openid%20email%20profile&response_type=code&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fapi%2Fauth%2Fcallback%2Fgoogle&prompt=consent&access_type=offline&service=lso&o2v=2&theme=glif&flowName=GeneralOAuthFlow'
-            // const ref = InAppBrowser.create(
-            //     url,
-            //     '_blank',
-            //     'location=yes,hidenavigationbuttons=yes,hideurlbar=yes,toolbarcolor=#f1f5f9'
-            // )
+            GoogleAuth.initialize()
 
-            // // if (ref) {
-            // //     ref!.on('loadstart').subscribe((e: any) => {
-            // //         const includesUrl = e.url.includes(`/callback/google`)
-            // //         if (includesUrl) {
-            // //             ref.close()
-            // //         }
-            // //     })
-            // // }
-
-            await Browser.open({
-                url: url,
-            })
+            const signin = await GoogleAuth.signIn()
+            console.log(signin)
         } catch (e) {
             console.log(e)
         }

@@ -31,7 +31,6 @@ import { useSession, signIn } from 'next-auth/react'
 import { Browser } from '@capacitor/browser'
 import { Preferences } from '@capacitor/preferences'
 import { Capacitor } from '@capacitor/core'
-import { App } from '@capacitor/app'
 
 const Close = () => {
     return (

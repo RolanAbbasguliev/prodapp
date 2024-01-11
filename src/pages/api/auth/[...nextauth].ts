@@ -16,47 +16,38 @@ export const authConfig: NextAuthOptions = {
     },
 
     providers: [
-        // CredentialsProvider({
-        //     name: 'credentials',
-        //     credentials: {
-        //         email: {
-        //             label: 'Email',
-        //             type: 'email',
-        //             placeholder: 'example@gmail.com',
-        //         },
-        //         password: {
-        //             label: 'Password',
-        //             type: 'password',
-        //         },
-        //     },
-        //     async authorize(credentials) {
-        //         console.log(credentials, 'CREDS')
-        //         if (!credentials || !credentials.email || !credentials.password)
-        //             return null
+        CredentialsProvider({
+            name: 'customGoogleAuth',
+            credentials: {
+                email: {
+                    label: 'Email',
+                    type: 'email',
+                    placeholder: 'example@gmail.com',
+                },
+            },
+            async authorize(credentials) {
+                if (!credentials || !credentials.email) return null
 
-        //         const user = await prisma?.user.findFirst({
-        //             where: { email: credentials.email },
-        //         })
+                const user = await prisma?.user.findFirst({
+                    where: { email: credentials.email },
+                })
 
-        //         if (!user) {
-        //             console.log('NO USER FOUND')
-        //             return null
-        //         }
+                if (!user) return null
 
-        //         const validPassword = await bcrypt.compare(
-        //             credentials.password,
-        //             user?.passwordHash!
-        //         )
+                if (user) {
+                    const { passwordHash, ...userWithoutPassword } = user
 
-        //         if (user && validPassword) {
-        //             const { passwordHash, ...userWithoutPassword } = user
+                    const returnUser: User = JSON.parse(
+                        JSON.stringify(userWithoutPassword)
+                    )
 
-        //             return userWithoutPassword as unknown as User
-        //         }
+                    return returnUser as User
+                }
 
-        //         return null
-        //     },
-        // }),
+                return null
+            },
+        }),
+
         GoogleProvider({
             clientId: process.env.GOOGLE_CLIENT_ID!,
             clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
@@ -78,7 +69,7 @@ export const authConfig: NextAuthOptions = {
         async redirect({ url, baseUrl }) {
             console.log(url, baseUrl)
             return baseUrl
-            // return 'http://localhost:3000/close'
+            return 'http://http://10.0.0.65:3000'
         },
     },
 }
