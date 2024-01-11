@@ -8,6 +8,7 @@ import { PrismaAdapter } from '@next-auth/prisma-adapter'
 import { PrismaClient } from '@prisma/client'
 import prisma from '../../../db/db'
 import { Browser } from '@capacitor/browser'
+import { pages } from 'next/dist/build/templates/app-page'
 
 export const authConfig: NextAuthOptions = {
     // adapter: PrismaAdapter(prisma),
@@ -17,12 +18,13 @@ export const authConfig: NextAuthOptions = {
 
     providers: [
         CredentialsProvider({
-            name: 'customGoogleAuth',
+            name: 'credentials',
+
             credentials: {
                 email: {
-                    label: 'Email',
                     type: 'email',
-                    placeholder: 'example@gmail.com',
+                    label: 'Email',
+                    placeholder: 'example@gmail.com ',
                 },
             },
             async authorize(credentials) {
@@ -40,6 +42,8 @@ export const authConfig: NextAuthOptions = {
                     const returnUser: User = JSON.parse(
                         JSON.stringify(userWithoutPassword)
                     )
+
+                    console.log('RETURN', returnUser)
 
                     return returnUser as User
                 }
@@ -62,15 +66,14 @@ export const authConfig: NextAuthOptions = {
         }),
     ],
     callbacks: {
-        async signIn({ profile }) {
-            console.log(profile)
-            return true
-        },
-        async redirect({ url, baseUrl }) {
-            console.log(url, baseUrl)
-            return baseUrl
-            return 'http://http://10.0.0.65:3000'
-        },
+        // async signIn({ profile }) {
+        //     return true
+        // },
+        // async redirect({ url, baseUrl }) {
+        //     console.log(url, baseUrl)
+        //     return baseUrl
+        //     return 'http://http://10.0.0.65:3000'
+        // },
     },
 }
 

@@ -66,16 +66,6 @@ const Login = () => {
                 redirect: false,
             })
 
-            // const res = await fetch('/api/auth/login', {
-            //     method: 'POST',
-            //     headers: {
-            //         'Content-Type': 'application/json',
-            //     },
-            //     body: JSON.stringify(data),
-            // })
-
-            // const message = (await res.json()).message
-
             setToast({
                 message: res?.status === 200 ? 'Login success' : 'Login failed',
                 isOpen: true,
@@ -88,19 +78,38 @@ const Login = () => {
         }
     }
 
-    const authGoogle = async () => {
+    const authGoogle = async (e: any) => {
         try {
-            // const url =
-            //     'https://accounts.google.com/o/oauth2/v2/auth/oauthchooseaccount?client_id=1063431845940-0glud65an0ms5kg72srf2696dteaa022.apps.googleusercontent.com&scope=openid%20email%20profile&response_type=code&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fapi%2Fauth%2Fcallback%2Fgoogle&prompt=consent&access_type=offline&service=lso&o2v=2&theme=glif&flowName=GeneralOAuthFlow'
-
-            // await Browser.open({
-            //     url: url,
-            // })
+            e.preventDefault()
 
             GoogleAuth.initialize()
 
-            const signin = await GoogleAuth.signIn()
-            console.log(signin)
+            const googleAuth = await GoogleAuth.signIn()
+            if (googleAuth.authentication.idToken) {
+                console.log(googleAuth.email)
+
+                const res = await signIn('credentials', {
+                    email: googleAuth.email,
+                    redirect: false,
+                })
+
+                if (res?.error) {
+                    setToast({
+                        isOpen: true,
+                        message: 'Google auth failed',
+                        color: 'danger',
+                    })
+                    return
+                }
+
+                if (res?.status === 200) {
+                    setToast({
+                        isOpen: true,
+                        message: 'Google auth success',
+                        color: 'success',
+                    })
+                }
+            }
         } catch (e) {
             console.log(e)
         }
@@ -192,7 +201,7 @@ const Login = () => {
                                         expand="block"
                                         type="button"
                                         className="ion-margin-top"
-                                        onClick={authGoogle}
+                                        onClick={(e) => authGoogle(e)}
                                     >
                                         Google Auth
                                         <IonIcon
