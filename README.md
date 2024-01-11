@@ -63,3 +63,9 @@
 10. `npm run start`
     Сервер будет крутиться на 3000 порту
 11. `npx cap open ios`
+
+## Google Auth
+
+1. Скопировать файл в репозитории /GoogleService-info.plist в /ios/App/App/ (он должен лежать рядом с Info.plist)
+2. В Xcode открыть файл и скопировать значение из поля REVERSEDD_CLIENT_ID
+3. Добавить значение в URL Types в поле URL Schemese как показано на риснке (Раздел Info) ![APPLE_CONF](image.png)
