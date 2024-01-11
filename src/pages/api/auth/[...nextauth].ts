@@ -43,8 +43,6 @@ export const authConfig: NextAuthOptions = {
                         JSON.stringify(userWithoutPassword)
                     )
 
-                    console.log('RETURN', returnUser)
-
                     return returnUser as User
                 }
 
