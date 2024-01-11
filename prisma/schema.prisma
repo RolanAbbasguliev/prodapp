@@ -11,11 +11,36 @@ datasource db {
 }
 
 model User {
-  id           Int       @id @default(autoincrement())
-  email        String    @unique
-  name         String
-  passwordHash String
-  products     Product[]
+  id            Int       @id @default(autoincrement()) @map("_id")
+  email         String    @unique
+  name          String
+  passwordHash  String?
+  image         String?
+  emailVerified Boolean?
+  products      Product[]
+  Account       Account[]
+
+  @@map("user")
+}
+
+model Account {
+  id                Int     @id @default(autoincrement()) @map("_id")
+  type              String
+  provider          String
+  providerAccountId String
+  token_type        String?
+  refresh_token     String?
+  access_token      String?
+  id_token          String?
+  scope             String?
+  session_state     String?
+  expires_at        Int?
+
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId Int
+
+  @@unique([provider, providerAccountId])
+  @@map("account")
 }
 
 model Product {

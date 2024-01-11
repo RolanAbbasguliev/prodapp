@@ -26,6 +26,7 @@ import { ErrorMessage } from '@hookform/error-message'
 import { useForm } from 'react-hook-form'
 import { documentOutline, downloadOutline, imagesOutline } from 'ionicons/icons'
 import useToast from '../../hooks/useToast'
+import { signOut } from 'next-auth/react'
 
 const AddProduct = () => {
     const { toast, setToast } = useToast()
@@ -120,6 +121,10 @@ const AddProduct = () => {
         },
     ]
 
+    const out = async () => {
+        await signOut({ callbackUrl: 'http://localhost:3000' })
+    }
+
     return (
         <>
             <IonHeader id="headerAddProduct">
@@ -127,6 +132,9 @@ const AddProduct = () => {
                     <IonTitle className="ion-text-center">
                         Create Poroduct
                     </IonTitle>
+                    <IonButton slot="end" onClick={out}>
+                        SIGN OUT
+                    </IonButton>
                 </IonToolbar>
             </IonHeader>
             <IonContent className="ion-padding" scrollY={false}>

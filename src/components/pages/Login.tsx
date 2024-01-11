@@ -24,12 +24,18 @@ import {
 import { useForm } from 'react-hook-form'
 import { ErrorMessage } from '@hookform/error-message'
 import { TextFieldTypes } from '../../interfaces/interfaces'
-import { logInOutline, personCircleOutline } from 'ionicons/icons'
+import { logInOutline, logoGoogle, personCircleOutline } from 'ionicons/icons'
 import { useEffect, useState } from 'react'
 import useToast from '../../hooks/useToast'
+import { useSession, signIn } from 'next-auth/react'
+import { Browser } from '@capacitor/browser'
+import { Preferences } from '@capacitor/preferences'
+import { Capacitor } from '@capacitor/core'
+import { GoogleAuth } from '@codetrix-studio/capacitor-google-auth'
 
 const Login = () => {
     const { toast, setToast } = useToast()
+    const { data, status, update } = useSession()
 
     const router = useIonRouter()
     const {
@@ -54,27 +60,73 @@ const Login = () => {
 
     const onSubmit = async (data: any) => {
         try {
-            const res = await fetch('/api/auth/login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(data),
+            const res = await signIn('credentials', {
+                email: data.email,
+                password: data.password,
+                redirect: false,
             })
-
-            const message = (await res.json()).message
 
             setToast({
-                message: message,
+                message: res?.status === 200 ? 'Login success' : 'Login failed',
                 isOpen: true,
-                color: res.status === 200 ? 'success' : 'danger',
+                color: res?.status === 200 ? 'success' : 'danger',
             })
 
-            if (res.status === 200) router.push('/app')
+            if (res?.status === 200) router.push('/app')
         } catch (e) {
             console.log(e)
         }
     }
+
+    const authGoogle = async (e: any) => {
+        try {
+            e.preventDefault()
+
+            GoogleAuth.initialize()
+
+            const googleAuth = await GoogleAuth.signIn()
+            if (googleAuth.authentication.idToken) {
+                console.log(googleAuth.email)
+
+                const res = await signIn('credentials', {
+                    email: googleAuth.email,
+                    redirect: false,
+                })
+
+                if (res?.error) {
+                    setToast({
+                        isOpen: true,
+                        message: 'Google auth failed',
+                        color: 'danger',
+                    })
+                    return
+                }
+
+                if (res?.status === 200) {
+                    setToast({
+                        isOpen: true,
+                        message: 'Google auth success',
+                        color: 'success',
+                    })
+                }
+            }
+        } catch (e) {
+            console.log(e)
+        }
+    }
+
+    useEffect(() => {
+        if (!(status === 'authenticated')) {
+            const interval = setInterval(() => {
+                console.log(status)
+                update()
+            }, 1000)
+
+            return () => clearInterval(interval)
+        } else {
+            router.push('/app')
+        }
+    }, [update])
 
     return (
         <IonPage>
@@ -144,19 +196,31 @@ const Login = () => {
                                                 slot="end"
                                             />
                                         </IonButton>
-                                        <IonButton
-                                            routerLink="/registration"
-                                            expand="block"
-                                            type="button"
-                                            className="ion-margin-top"
-                                        >
-                                            Create Account
-                                            <IonIcon
-                                                icon={personCircleOutline}
-                                                slot="end"
-                                            />
-                                        </IonButton>
                                     </form>
+                                    <IonButton
+                                        expand="block"
+                                        type="button"
+                                        className="ion-margin-top"
+                                        onClick={(e) => authGoogle(e)}
+                                    >
+                                        Google Auth
+                                        <IonIcon
+                                            slot="end"
+                                            icon={logoGoogle}
+                                        ></IonIcon>
+                                    </IonButton>
+                                    <IonButton
+                                        routerLink="/registration"
+                                        expand="block"
+                                        type="button"
+                                        className="ion-margin-top"
+                                    >
+                                        Create Account
+                                        <IonIcon
+                                            icon={personCircleOutline}
+                                            slot="end"
+                                        />
+                                    </IonButton>
                                 </IonCardContent>
                             </IonCard>
                         </IonCol>
