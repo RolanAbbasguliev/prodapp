@@ -10,7 +10,7 @@ import prisma from '../../../db/db'
 import { Browser } from '@capacitor/browser'
 
 export const authConfig: NextAuthOptions = {
-    adapter: PrismaAdapter(prisma),
+    // adapter: PrismaAdapter(prisma),
     session: {
         strategy: 'jwt',
     },
@@ -71,18 +71,11 @@ export const authConfig: NextAuthOptions = {
         }),
     ],
     callbacks: {
-        async signIn({ user, account, profile, email, credentials }) {
-            try {
-                console.log(profile, 'GOOOOO')
-
-                return true
-            } catch (e) {
-                return false
-            }
+        async signIn({ profile }) {
+            console.log(profile)
+            return true
         },
-
         async redirect({ url, baseUrl }) {
-            console.log(url, baseUrl)
             return 'http://localhost:3000/close'
         },
     },

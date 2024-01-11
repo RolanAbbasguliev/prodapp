@@ -31,10 +31,12 @@ import { useSession, signIn } from 'next-auth/react'
 import { Browser } from '@capacitor/browser'
 import { Preferences } from '@capacitor/preferences'
 import { Capacitor } from '@capacitor/core'
+import { App } from '@capacitor/app'
+import { InAppBrowser } from '@capgo/inappbrowser'
 
 const Login = () => {
     const { toast, setToast } = useToast()
-    const { data } = useSession()
+    const { data, status, update } = useSession()
 
     const router = useIonRouter()
     const {
@@ -90,9 +92,11 @@ const Login = () => {
     const authGoogle = async () => {
         try {
             // const res = await signIn('google', {})
-            const { InAppBrowser } = await import(
-                '@awesome-cordova-plugins/in-app-browser'
-            )
+
+            // App.addListener('appUrlOpen', (data) => {
+            //     console.log('OPENED')
+            // })
+
             const url =
                 'https://accounts.google.com/o/oauth2/v2/auth/oauthchooseaccount?client_id=1063431845940-0glud65an0ms5kg72srf2696dteaa022.apps.googleusercontent.com&scope=openid%20email%20profile&response_type=code&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fapi%2Fauth%2Fcallback%2Fgoogle&prompt=consent&access_type=offline&service=lso&o2v=2&theme=glif&flowName=GeneralOAuthFlow'
             // const ref = InAppBrowser.create(
@@ -110,13 +114,22 @@ const Login = () => {
             // //     })
             // // }
 
+            await Browser.open({
+                url: url,
+            })
+
             // Browser.addListener('browserFinished', () => {
             //     console.log('finished')
             // })
 
-            await Browser.open({
-                url: 'https://accounts.google.com/o/oauth2/v2/auth/oauthchooseaccount?client_id=1063431845940-0glud65an0ms5kg72srf2696dteaa022.apps.googleusercontent.com&scope=openid%20email%20profile&response_type=code&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fapi%2Fauth%2Fcallback%2Fgoogle&prompt=consent&access_type=offline&service=lso&o2v=2&theme=glif&flowName=GeneralOAuthFlow',
-            })
+            // InAppBrowser.addListener('urlChangeEvent', (data) => {
+            //     console.log(data)
+            // })
+
+            // InAppBrowser.openWebView({
+            //     url: url,
+            // })
+
             // await Preferences.set({
             //     key: 'googleAuth',
             //     value: 'true',
@@ -126,6 +139,15 @@ const Login = () => {
             console.log(e)
         }
     }
+
+    useEffect(() => {
+        // TIP: You can also use `navigator.onLine` and some extra event handlers
+        // to check if the user is online and only update the session if they are.
+        // https://developer.mozilla.org/en-US/docs/Web/API/Navigator/onLine
+        const interval = setInterval(() => update(), 1000)
+        console.log(status)
+        return () => clearInterval(interval)
+    }, [update])
 
     return (
         <IonPage>
@@ -202,7 +224,7 @@ const Login = () => {
                                         className="ion-margin-top"
                                         onClick={authGoogle}
                                     >
-                                        Google Auth F
+                                        Google Auth
                                         <IonIcon
                                             slot="end"
                                             icon={logoGoogle}

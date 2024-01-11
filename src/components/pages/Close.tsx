@@ -34,14 +34,13 @@ import { Capacitor } from '@capacitor/core'
 import { App } from '@capacitor/app'
 
 const Close = () => {
-    const Close = () => {
-        App.addListener('appUrlOpen', (data) => {
-            console.log(data)
-        })
-    }
     return (
         <IonPage>
-            <IonButton onClick={Close}>close</IonButton>
+            <IonCard>
+                <IonCardContent className="ion-text-center">
+                    Авторизация прошла успешна, можете закрыть текущую вкладку
+                </IonCardContent>
+            </IonCard>
         </IonPage>
     )
 }
