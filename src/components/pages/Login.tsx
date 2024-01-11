@@ -32,7 +32,6 @@ import { Browser } from '@capacitor/browser'
 import { Preferences } from '@capacitor/preferences'
 import { Capacitor } from '@capacitor/core'
 import { App } from '@capacitor/app'
-import { InAppBrowser } from '@capgo/inappbrowser'
 
 const Login = () => {
     const { toast, setToast } = useToast()
@@ -117,36 +116,22 @@ const Login = () => {
             await Browser.open({
                 url: url,
             })
-
-            // Browser.addListener('browserFinished', () => {
-            //     console.log('finished')
-            // })
-
-            // InAppBrowser.addListener('urlChangeEvent', (data) => {
-            //     console.log(data)
-            // })
-
-            // InAppBrowser.openWebView({
-            //     url: url,
-            // })
-
-            // await Preferences.set({
-            //     key: 'googleAuth',
-            //     value: 'true',
-            // })
-            // console.log(res, 'GOOGLE AUTH')
         } catch (e) {
             console.log(e)
         }
     }
 
     useEffect(() => {
-        // TIP: You can also use `navigator.onLine` and some extra event handlers
-        // to check if the user is online and only update the session if they are.
-        // https://developer.mozilla.org/en-US/docs/Web/API/Navigator/onLine
-        const interval = setInterval(() => update(), 1000)
-        console.log(status)
-        return () => clearInterval(interval)
+        if (!(status === 'authenticated')) {
+            const interval = setInterval(() => {
+                console.log(status)
+                update()
+            }, 1000)
+
+            return () => clearInterval(interval)
+        } else {
+            router.push('/app')
+        }
     }, [update])
 
     return (
